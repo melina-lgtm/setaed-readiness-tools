@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inclusive R&D Readiness Self-Assessment — SETA-ED</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root {
+  color-scheme: light;
+  --navy: #1F3A5F;
+  --navy-dark: #142747;
+  --orange: #E8861C;
+  --green: #2E7D5C;
+  --bg: #F8F9FB;
+  --card: #FFFFFF;
+  --text: #1A1A1A;
+  --muted: #6B7280;
+  --border: #E5E7EB;
+  --tint: #EDF2F8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.5;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 24px 20px 80px; }
+
+/* HERO */
+.hero { padding: 24px 0 12px; }
+.kicker { color: var(--orange); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
+h1 { color: var(--navy); margin: 4px 0 8px; font-size: 28px; line-height: 1.2; font-weight: 700; }
+.lead { color: var(--muted); font-size: 16px; max-width: 820px; }
+
+/* TABS */
+.tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin: 24px 0 24px; }
+.tab { background: none; border: none; padding: 10px 16px; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+.tab.active { color: var(--navy); border-bottom-color: var(--orange); }
+.tab:hover { color: var(--navy); }
+
+/* PANELS */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* LADDER GRID */
+.ladders { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+@media (max-width: 980px) { .ladders { grid-template-columns: 1fr; } }
+.ladder {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 18px 18px 14px; display: flex; flex-direction: column;
+}
+.ladder h2 { margin: 0 0 4px; color: var(--navy); font-size: 16px; }
+.ladder .sub { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+
+.rung {
+  border-left: 3px solid var(--border);
+  padding: 10px 12px 10px 14px;
+  margin-left: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: background .15s;
+}
+.rung:hover { background: var(--tint); }
+.rung::before {
+  content: ""; position: absolute; left: -8px; top: 14px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--card); border: 2px solid var(--border);
+}
+.rung.completed::before { background: var(--green); border-color: var(--green); }
+.rung.current::before { background: var(--orange); border-color: var(--orange); box-shadow: 0 0 0 4px rgba(232,134,28,.15); }
+.rung-label { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.rung-num { font-weight: 700; color: var(--navy); font-size: 14px; }
+.rung-name { font-weight: 500; font-size: 13px; flex: 1; }
+.rung-status { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.rung.completed .rung-status { color: var(--green); font-weight: 600; }
+.rung.current .rung-status { color: var(--orange); font-weight: 700; }
+
+/* EXPANDED CONTENT */
+.rung-body { display: none; padding: 12px 0 6px; }
+.rung.expanded { background: var(--tint); }
+.rung.expanded .rung-body { display: block; }
+.rung-desc { font-size: 13px; color: var(--text); margin-bottom: 10px; }
+.rung-q { font-size: 13px; margin-bottom: 8px; }
+.rung-q label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+.rung-q input { margin-top: 3px; flex-shrink: 0; }
+.rung-actions { margin-top: 10px; display: flex; gap: 8px; }
+.btn {
+  background: var(--navy); color: white; border: none; padding: 6px 12px;
+  border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+.btn:hover { background: var(--navy-dark); }
+.btn.secondary { background: white; color: var(--navy); border: 1px solid var(--border); }
+.btn.secondary:hover { background: var(--tint); }
+
+/* SCORE PANEL */
+.score-panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 22px; }
+.score-grid { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: center; }
+@media (max-width: 800px) { .score-grid { grid-template-columns: 1fr; } }
+.scores-display { display: flex; flex-direction: column; gap: 12px; }
+.score-row { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 14px; background: var(--bg); border-radius: 8px; border-left: 4px solid var(--navy); }
+.score-row.peoml { border-left-color: #5B7FB8; }
+.score-row.proml { border-left-color: #82A4D0; }
+.score-name { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.score-val { font-size: 22px; font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+.score-val .of { font-size: 13px; color: var(--muted); font-weight: 500; }
+.recommendations { background: #FFF8EC; border-left: 4px solid var(--orange); padding: 14px 16px; border-radius: 6px; margin-top: 16px; font-size: 14px; }
+.recommendations h3 { margin: 0 0 8px; color: var(--navy); font-size: 14px; }
+.recommendations ul { margin: 0; padding-left: 20px; }
+.recommendations li { margin-bottom: 6px; }
+
+/* OVERVIEW */
+.overview-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media (max-width: 980px) { .overview-grid { grid-template-columns: 1fr; } }
+.overview-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.overview-card h2 { color: var(--navy); margin: 0 0 4px; font-size: 16px; }
+.overview-card .sub { color: var(--muted); font-size: 12px; margin-bottom: 12px; }
+.overview-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.overview-table th { text-align: left; background: var(--tint); padding: 8px; color: var(--navy); font-weight: 600; font-size: 12px; }
+.overview-table td { padding: 8px; border-top: 1px solid var(--border); vertical-align: top; }
+.overview-table td:first-child { width: 40px; font-weight: 700; color: var(--navy); }
+.overview-table td:nth-child(2) { width: 160px; font-weight: 500; }
+
+/* WORKED EXAMPLE */
+.example-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px; max-width: 920px; }
+.example-card h2 { color: var(--navy); margin: 0 0 8px; }
+.example-card .sub { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+.timeline { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 14px; }
+@media (max-width: 720px) { .timeline { grid-template-columns: 1fr; } }
+.timeline-card { background: var(--bg); border-radius: 8px; padding: 14px; border-left: 4px solid var(--navy); }
+.timeline-card.target { border-left-color: var(--green); }
+.timeline-card h3 { color: var(--navy); margin: 0 0 8px; font-size: 14px; }
+.scoreline { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 8px; }
+.score-pill { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; text-align: center; }
+.score-pill .lab { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.score-pill .num { font-size: 18px; font-weight: 700; color: var(--navy); }
+.activity-list { font-size: 13px; padding-left: 20px; margin: 14px 0 0; }
+.activity-list li { margin-bottom: 6px; }
+
+/* FOOTER */
+.footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; text-align: center; }
+.reset-btn { background: none; border: none; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; }
+.reset-btn:hover { color: var(--navy); }
+
+#radar-canvas { max-width: 100%; height: auto !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <div class="kicker">SETA-ED · Impact Engineering</div>
+  <h1>Inclusive R&D Readiness Self-Assessment</h1>
+  <p class="lead">Where does your education R&D project actually stand on the three dimensions that matter — Prototype maturity, People composition, and Process discipline? Click through the levels, mark what's true, and see your full readiness profile.</p>
+</div>
+
+<div class="tabs" role="tablist">
+  <button class="tab active" data-tab="assess">Self-assessment</button>
+  <button class="tab" data-tab="overview">Frameworks at a glance</button>
+  <button class="tab" data-tab="example">Worked example</button>
+</div>
+
+<!-- ============ TAB 1: ASSESSMENT ============ -->
+<div class="panel active" id="panel-assess">
+  <div class="ladders" id="ladders"></div>
+
+  <div class="score-panel">
+    <div class="score-grid">
+      <div>
+        <canvas id="radar-canvas" width="320" height="320"></canvas>
+      </div>
+      <div>
+        <div class="scores-display" id="scores"></div>
+        <div class="recommendations" id="recommendations"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TAB 2: OVERVIEW ============ -->
+<div class="panel" id="panel-overview">
+  <div class="overview-grid" id="overview-grid"></div>
+</div>
+
+<!-- ============ TAB 3: WORKED EXAMPLE ============ -->
+<div class="panel" id="panel-example">
+  <div class="example-card">
+    <h2>WriteAhead — an AI-powered writing feedback tool</h2>
+    <p class="sub">A hypothetical (but typical) early-stage venture: an AI tool that gives middle school students feedback on their writing, designed for multilingual learners. Two co-founders, 15 students of pilot data, no formal evidence yet.</p>
+
+    <div class="timeline">
+      <div class="timeline-card">
+        <h3>Today (engagement start)</h3>
+        <div class="scoreline">
+          <div class="score-pill"><div class="lab">PRL</div><div class="num">3</div></div>
+          <div class="score-pill"><div class="lab">PeoML</div><div class="num">1</div></div>
+          <div class="score-pill"><div class="lab">ProML</div><div class="num">1</div></div>
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin: 12px 0 0;">Prototype works in one classroom. Equity is stated in the mission, but no community partnerships and no equity-driven design decisions documented.</p>
+      </div>
+
+      <div class="timeline-card target">
+        <h3>12 months from now (target)</h3>
+        <div class="scoreline">
+          <div class="score-pill"><div class="lab">PRL</div><div class="num">5</div></div>
+          <div class="score-pill"><div class="lab">PeoML</div><div class="num">2</div></div>
+          <div class="score-pill"><div class="lab">ProML</div><div class="num">2</div></div>
+        </div>
+        <p style="font-size:13px; color:var(--muted); margin: 12px 0 0;">Medium-fidelity prototype validated in simulated classrooms. Community consultation mechanism documented. Equity-driven design decisions trail in place.</p>
+      </div>
+    </div>
+
+    <h3 style="color:var(--navy); margin-top: 24px; font-size:15px;">Activities required across all three dimensions</h3>
+    <ul class="activity-list">
+      <li><b>Months 1–3:</b> Begin formal feasibility study (PRL); identify multilingual-learner community partners and establish paid advisory cadence (PeoML); translate equity goals into design-decision criteria with documented trail (ProML).</li>
+      <li><b>Months 4–7:</b> Build integrated prototype with stable infrastructure (PRL); bring at least one design decision through community advisory review (PeoML); design simulated-classroom test as subgroup-first study with pre-registered analysis plan (ProML).</li>
+      <li><b>Months 8–10:</b> Test prototype in lightly-simulated classroom environment (PRL); recruit at least one community member into paid team or advisory role (PeoML); run prototype test with subgroup-aware data collection (ProML).</li>
+      <li><b>Months 11–12:</b> Produce evidence package — prototype results, scaling requirements, documented consultation mechanism, pre-registered subgroup analysis plan. This is the artifact that unlocks the next funding cycle.</li>
+    </ul>
+
+    <p style="font-size:13px; color: var(--muted); margin-top: 18px; padding: 12px; background: var(--bg); border-radius: 6px;">
+      <b>The point:</b> a credible R&D plan develops all three dimensions in parallel. WriteAhead's prototype work alone (PRL 3 → 5) would produce a working tool with no equity discipline behind it. The three readiness scores moving together are what make the evidence credible to a funder, useful to a district, and accountable to the multilingual learners it claims to serve.
+    </p>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Your assessment is saved locally in this browser. </span>
+  <button class="reset-btn" onclick="resetAssessment()">Reset all answers</button>
+  <div style="margin-top: 8px;">SETA-ED · Scientific and Engineering Technical Assistance for Education · Impact Engineering for the Education Sector</div>
+</div>
+
+</div>
+
+<script>
+// =========================================================
+// DATA: PRL, PeoML, ProML levels with definitions and questions
+// =========================================================
+const FRAMEWORKS = {
+  prl: {
+    title: 'Prototype Readiness',
+    sub: 'PRL · 9 levels · prototype maturity',
+    color: '#1F3A5F',
+    levels: [
+      { num: 1, name: 'Basic Research',
+        desc: 'You have an idea grounded in learning science or research. No prototype yet.',
+        qs: [
+          'Is your idea grounded in specific, citable research from learning science, cognitive science, or a related field?',
+          'Can you articulate the mechanism by which your idea is expected to improve a specific learner or educator outcome?',
+          'Have you documented the prior research that supports your theory of change, even informally?',
+        ]},
+      { num: 2, name: 'Applied Research',
+        desc: "You've formulated a specific application concept and can describe it, though it's still speculative.",
+        qs: [
+          'Have you translated your research grounding into a specific, concrete application concept?',
+          'Can you describe the specific educational activity your application is intended to enhance or replace?',
+          'Have you identified, at least on paper, which components of the application would need to exist for it to work?',
+        ]},
+      { num: 3, name: 'Proof of Application Concept',
+        desc: "You've run feasibility studies. Individual components work in isolation under controlled conditions.",
+        qs: [
+          'Have individual components of your application been tested in isolation (not yet integrated)?',
+          'Have you completed a feasibility study showing the concept could plausibly work as intended?',
+          'Do you have a detailed characterization of the user process your application is intended to support, including baseline performance before your application?',
+        ]},
+      { num: 4, name: 'Initial Prototype & Verification',
+        desc: 'You have a low-fidelity working prototype. It demonstrates basic functionality in a lab-like setting.',
+        qs: [
+          'Have you built an integrated prototype — even a low-fidelity one — where the components work together?',
+          'Has the prototype been demonstrated in a lab-like environment (not yet a real classroom)?',
+          'Have you identified the organizational and human-process issues a real deployment will need to address?',
+        ]},
+      { num: 5, name: 'Validation in Relevant Environment',
+        desc: 'You have a medium-fidelity prototype tested in a simulated classroom environment. Performance potential is articulated.',
+        qs: [
+          'Has your medium-fidelity prototype been tested in a simulated or closely-approximating classroom environment?',
+          'Can you articulate, with evidence from that testing, the specific performance improvement the application could achieve in real classrooms?',
+          'Have you defined what scaling the prototype would require (technical, operational, data)?',
+        ]},
+      { num: 6, name: 'Demonstration in Relevant Environment',
+        desc: 'You have a high-fidelity prototype demonstrated in a simulated operational environment. Performance potential is demonstrated.',
+        qs: [
+          'Has your high-fidelity prototype been beta-tested in a simulated or relevant operational environment?',
+          'Have you demonstrated (not merely projected) performance improvements in that environment?',
+          'Are any components of your application already running in end-user environments, even if not the full system?',
+        ]},
+      { num: 7, name: 'Application Prototype in Operational Environment',
+        desc: 'Your prototype runs in a real classroom, integrated with the actual systems and workflows of the school.',
+        qs: [
+          'Is your prototype running in a real classroom, integrated with the actual systems and workflows of the school?',
+          'Has functionality been demonstrated (not just promised) to the educators and students using it?',
+          'Have you worked out most of the major bugs and integration issues that surfaced during classroom deployment?',
+        ]},
+      { num: 8, name: 'Application Completed & Qualified',
+        desc: 'Your product is fully built, tested, and qualified by school partners for use in their classrooms.',
+        qs: [
+          'Is the product fully built in its intended final form, with user documentation, training materials, and maintenance documentation?',
+          'Has a school partner formally qualified or approved the product for ongoing use in their educational activities?',
+          'Has verification and validation testing been completed against your target outcomes?',
+        ]},
+      { num: 9, name: 'Sustained, Scaled Use',
+        desc: 'Your product is in sustained, scaled use across many real classrooms — including with priority student populations.',
+        qs: [
+          'Is the product in sustained, repeated use across multiple schools and classrooms over time?',
+          'Is use occurring specifically in schools serving priority student populations, with outcome data being collected?',
+          'Is there sustaining engineering, customer support, and continuous improvement infrastructure in place?',
+        ]},
+    ],
+  },
+  peoml: {
+    title: 'People Readiness',
+    sub: 'PeoML · 5 levels · team & community',
+    color: '#5B7FB8',
+    levels: [
+      { num: 1, name: 'Equity stated',
+        desc: 'Equity is named as a value in mission, vision, or pitch language. The team has not yet operationalized that value into who is on the team or who is consulted.',
+        qs: [
+          'Is equity — including the population your product is meant to serve — named explicitly in your mission or theory of change?',
+          'Can the team articulate, beyond marketing language, what equity means for your specific R&D project?',
+          'Is there at least one team member with explicit responsibility for thinking about equity (not as a side role, but as an accountable function)?',
+        ]},
+      { num: 2, name: 'Community informed',
+        desc: 'Community members from the priority population have been consulted at key R&D moments. Consultation is one-directional; community members do not yet shape decisions.',
+        qs: [
+          'Have community members from the priority population been consulted on the product concept and approach — not just user-tested, but engaged on the underlying design choices?',
+          'Have those consultations shaped at least one substantive design decision (a feature, a measurement, a partnership choice) in a way you can document?',
+          'Is there a documented mechanism for ongoing community consultation, not just one-time interviews at funder request?',
+        ]},
+      { num: 3, name: 'Community present',
+        desc: 'Community members from the priority population are present in defined R&D moments and in some team functions. They participate but do not yet co-lead.',
+        qs: [
+          'Do community members from the priority population hold formal, paid roles on the team or advisory structure?',
+          'Are community members present in defined R&D moments such as prototype review, evidence interpretation, or roadmap planning?',
+          "Does the team's composition — not just its advisors — reflect the population the product is meant to serve, including in technical and decision-making roles?",
+        ]},
+      { num: 4, name: 'Community partnership',
+        desc: 'Community members are co-leaders on substantive R&D decisions and are accountable for outcomes alongside the founding team.',
+        qs: [
+          'Are community members co-leaders on substantive R&D decisions, with documented decision rights (not just "input")?',
+          'Is community accountability symmetric: are community partners accountable for outcomes alongside the founding team, with shared metrics?',
+          'Are community partners compensated commensurate with their decision-making role, not at consultant or honorarium rates?',
+        ]},
+      { num: 5, name: 'Community co-ownership',
+        desc: 'Community holds shared decision-making power and equity in outcomes. Governance, ownership, and revenue-sharing reflect community standing as co-owners.',
+        qs: [
+          'Do governance documents — bylaws, board composition, equity arrangements — reflect community standing as co-owners of the work?',
+          'Is decision-making power shared on the most consequential decisions (pivots, scale, monetization, intellectual property)?',
+          'Is there a revenue, equity, or asset-sharing arrangement that gives the community served a stake in the long-term value the venture creates?',
+        ]},
+    ],
+  },
+  proml: {
+    title: 'Process Readiness',
+    sub: 'ProML · 5 levels · R&D-cycle equity',
+    color: '#82A4D0',
+    levels: [
+      { num: 1, name: 'Equity defined',
+        desc: 'Equity goals are explicit, measurable, and tied to the specific population the project is meant to serve.',
+        qs: [
+          'Are equity goals explicit and measurable for this R&D project (specific subgroups, specific outcomes, specific decisions they should shape)?',
+          'Can the team articulate which subgroup-level outcomes the project is responsible for — not just population-level averages?',
+          'Is at least one team member accountable for keeping equity goals visible across phases, not just at concept stage?',
+        ]},
+      { num: 2, name: 'Equity in design',
+        desc: 'Design choices systematically reflect equity goals. The R&D plan documents how equity considerations shaped at least one design decision per phase.',
+        qs: [
+          'Have design choices in at least one current phase been visibly shaped by equity considerations, with a documented decision trail?',
+          'Does the R&D plan explicitly address how design choices serve — or fail to serve — the priority subgroups, not just the average user?',
+          'Are equity-relevant tensions (fidelity vs. access, simplicity vs. adaptability) named explicitly in design decisions, rather than glossed over?',
+        ]},
+      { num: 3, name: 'Equity in data',
+        desc: 'Data collection and analysis are designed from the start to support disaggregation, subgroup learning, and detection of differential effects.',
+        qs: [
+          'Is data collection designed from the start to support disaggregation by all priority subgroups (including subgroup combinations where relevant)?',
+          'Are sample sizes and recruitment plans powered for subgroup analysis — not just for average effects?',
+          'Does the analysis plan pre-specify subgroup questions (including null and counter-hypotheses) before data are collected?',
+        ]},
+      { num: 4, name: 'Equity in iteration',
+        desc: 'Iteration cycles use subgroup evidence to improve the prototype. When subgroup analysis reveals differential effects, the R&D process responds with documented design or measurement changes.',
+        qs: [
+          'When subgroup analysis reveals differential effects, does the R&D process respond with documented design or measurement changes in the next iteration cycle?',
+          'Are iteration decisions adjudicated against equity criteria, not just against average performance?',
+          'Is there a mechanism for community partners and team members to raise equity concerns mid-cycle and have them acted on, rather than deferred to a future report?',
+        ]},
+      { num: 5, name: 'Equity in dissemination & governance',
+        desc: 'Findings flow to the communities served, in formats and languages they can use. Decision rights about scaling and continued use sit (in part) with the populations the project serves.',
+        qs: [
+          'Are findings disseminated to the communities served in formats and languages they can use — not only to funders and academic audiences?',
+          'Do decisions about scaling, monetization, and continued use of the product reflect input or shared decision rights with the population the project serves?',
+          'Is there a governance mechanism (board representation, community standing on key decisions, formal accountability) that gives the community served continuing standing?',
+        ]},
+    ],
+  },
+};
+
+const STORAGE_KEY = 'setaed-readiness-v1';
+
+// =========================================================
+// STATE: which questions are checked, computed scores
+// =========================================================
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* ignore */ }
+  // Initialize: all questions unchecked
+  const init = {};
+  Object.keys(FRAMEWORKS).forEach(fw => {
+    init[fw] = {};
+    FRAMEWORKS[fw].levels.forEach(lvl => {
+      init[fw][lvl.num] = lvl.qs.map(() => false);
+    });
+  });
+  return init;
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignore */ }
+}
+
+// Score = highest level where ALL questions are answered yes for that level AND every level below.
+function computeScore(fw) {
+  const levels = FRAMEWORKS[fw].levels;
+  let highest = 0;
+  for (const lvl of levels) {
+    const ans = state[fw][lvl.num] || [];
+    const allYes = ans.length === lvl.qs.length && ans.every(Boolean);
+    if (allYes) highest = lvl.num;
+    else break;
+  }
+  return highest;
+}
+
+// =========================================================
+// RENDER: ladders
+// =========================================================
+function renderLadders() {
+  const root = document.getElementById('ladders');
+  root.innerHTML = '';
+  Object.keys(FRAMEWORKS).forEach(fwKey => {
+    const fw = FRAMEWORKS[fwKey];
+    const score = computeScore(fwKey);
+    const col = document.createElement('div');
+    col.className = 'ladder';
+    col.innerHTML = `<h2>${fw.title}</h2><div class="sub">${fw.sub}</div>`;
+    fw.levels.forEach(lvl => {
+      const isCompleted = lvl.num <= score;
+      const isCurrent = lvl.num === score + 1;
+      const rung = document.createElement('div');
+      rung.className = 'rung' + (isCompleted ? ' completed' : '') + (isCurrent ? ' current' : '');
+      rung.dataset.fw = fwKey;
+      rung.dataset.lvl = lvl.num;
+      const status = isCompleted ? '✓ achieved' : (isCurrent ? 'next up' : '');
+      rung.innerHTML = `
+        <div class="rung-label">
+          <span class="rung-num">${lvl.num}</span>
+          <span class="rung-name">${lvl.name}</span>
+          <span class="rung-status">${status}</span>
+        </div>
+        <div class="rung-body">
+          <div class="rung-desc">${lvl.desc}</div>
+          ${lvl.qs.map((q, i) => `
+            <div class="rung-q">
+              <label>
+                <input type="checkbox" data-fw="${fwKey}" data-lvl="${lvl.num}" data-qi="${i}" ${state[fwKey][lvl.num][i] ? 'checked' : ''}>
+                <span>${q}</span>
+              </label>
+            </div>`).join('')}
+          <div class="rung-actions">
+            <button class="btn" onclick="markAll('${fwKey}', ${lvl.num}, true, event)">Mark all yes</button>
+            <button class="btn secondary" onclick="markAll('${fwKey}', ${lvl.num}, false, event)">Clear</button>
+          </div>
+        </div>`;
+      rung.querySelector('.rung-label').addEventListener('click', e => {
+        e.stopPropagation();
+        rung.classList.toggle('expanded');
+      });
+      rung.querySelectorAll('input[type=checkbox]').forEach(cb => {
+        cb.addEventListener('change', () => {
+          const fw = cb.dataset.fw, lvl = +cb.dataset.lvl, qi = +cb.dataset.qi;
+          state[fw][lvl][qi] = cb.checked;
+          saveState();
+          renderAll();
+        });
+        cb.addEventListener('click', e => e.stopPropagation());
+      });
+      col.appendChild(rung);
+    });
+    root.appendChild(col);
+  });
+}
+
+function markAll(fw, lvl, value, ev) {
+  if (ev) ev.stopPropagation();
+  state[fw][lvl] = state[fw][lvl].map(() => value);
+  saveState();
+  renderAll();
+}
+
+// =========================================================
+// RENDER: scores + radar
+// =========================================================
+let chart = null;
+function renderScores() {
+  const prl = computeScore('prl'), peoml = computeScore('peoml'), proml = computeScore('proml');
+  const root = document.getElementById('scores');
+  root.innerHTML = `
+    <div class="score-row">
+      <div><div class="score-name">Prototype</div><div style="font-size:11px;color:var(--muted);">PRL</div></div>
+      <div class="score-val">${prl}<span class="of"> / 9</span></div>
+    </div>
+    <div class="score-row peoml">
+      <div><div class="score-name">People</div><div style="font-size:11px;color:var(--muted);">PeoML</div></div>
+      <div class="score-val">${peoml}<span class="of"> / 5</span></div>
+    </div>
+    <div class="score-row proml">
+      <div><div class="score-name">Process</div><div style="font-size:11px;color:var(--muted);">ProML</div></div>
+      <div class="score-val">${proml}<span class="of"> / 5</span></div>
+    </div>`;
+
+  // Recommendations
+  const recs = [];
+  if (prl === 0 && peoml === 0 && proml === 0) {
+    recs.push('Pick any dimension and click level 1 to start. The framework is designed to surface the difference between aspirational language and operational reality — being honest at level 1 is more useful than aspirational at level 5.');
+  } else {
+    // Find weakest normalized dimension
+    const norms = { prl: prl/9, peoml: peoml/5, proml: proml/5 };
+    const weakest = Object.entries(norms).sort((a,b) => a[1]-b[1])[0][0];
+    const labels = { prl: 'Prototype maturity (PRL)', peoml: 'People readiness (PeoML)', proml: 'Process readiness (ProML)' };
+    recs.push(`Your weakest dimension is <b>${labels[weakest]}</b>. The most common pattern in education R&D is a project whose prototype maturity outpaces its people and process readiness — closing that gap before scaling is what produces equitable outcomes rather than equity reports.`);
+    // Specific advance suggestion
+    const next = computeScore(weakest) + 1;
+    const fw = FRAMEWORKS[weakest];
+    const maxLvl = fw.levels.length;
+    if (next <= maxLvl) {
+      recs.push(`Next up on ${labels[weakest]}: level ${next} — <b>${fw.levels[next-1].name}</b>. ${fw.levels[next-1].desc}`);
+    } else {
+      recs.push(`You've reached the top of ${labels[weakest]}. Your strongest move now is to lift the other two dimensions to match.`);
+    }
+  }
+  document.getElementById('recommendations').innerHTML = `<h3>Where to focus next</h3><ul>${recs.map(r=>`<li>${r}</li>`).join('')}</ul>`;
+
+  // Radar
+  const ctx = document.getElementById('radar-canvas');
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['Prototype (PRL)', 'People (PeoML)', 'Process (ProML)'],
+      datasets: [{
+        label: 'Your readiness',
+        data: [prl/9*100, peoml/5*100, proml/5*100],
+        backgroundColor: 'rgba(31, 58, 95, 0.18)',
+        borderColor: '#1F3A5F',
+        borderWidth: 2,
+        pointBackgroundColor: '#E8861C',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: '#1F3A5F',
+        pointRadius: 5,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const labels = ['Prototype', 'People', 'Process'];
+              const maxes = [9, 5, 5];
+              const raw = [prl, peoml, proml];
+              return labels[ctx.dataIndex] + ': ' + raw[ctx.dataIndex] + ' / ' + maxes[ctx.dataIndex];
+            }
+          }
+        }
+      },
+      scales: {
+        r: {
+          min: 0, max: 100, ticks: { display: false, stepSize: 25 },
+          grid: { color: '#E5E7EB' }, angleLines: { color: '#E5E7EB' },
+          pointLabels: { font: { size: 13, weight: '600' }, color: '#1F3A5F' },
+        }
+      }
+    }
+  });
+}
+
+// =========================================================
+// RENDER: overview tab
+// =========================================================
+function renderOverview() {
+  const root = document.getElementById('overview-grid');
+  root.innerHTML = '';
+  Object.keys(FRAMEWORKS).forEach(fwKey => {
+    const fw = FRAMEWORKS[fwKey];
+    const card = document.createElement('div');
+    card.className = 'overview-card';
+    card.innerHTML = `
+      <h2>${fw.title}</h2>
+      <div class="sub">${fw.sub}</div>
+      <table class="overview-table">
+        <thead><tr><th>#</th><th>Stage</th><th>What it means</th></tr></thead>
+        <tbody>${fw.levels.map(l => `<tr><td>${l.num}</td><td>${l.name}</td><td>${l.desc}</td></tr>`).join('')}</tbody>
+      </table>`;
+    root.appendChild(card);
+  });
+}
+
+// =========================================================
+// TABS
+// =========================================================
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-' + t.dataset.tab).classList.add('active');
+    if (t.dataset.tab === 'assess') {
+      // Re-render chart so it picks up canvas size
+      setTimeout(renderScores, 50);
+    }
+  });
+});
+
+// =========================================================
+// RESET
+// =========================================================
+function resetAssessment() {
+  if (!confirm('Reset all answers? This will clear your local progress.')) return;
+  Object.keys(FRAMEWORKS).forEach(fw => {
+    FRAMEWORKS[fw].levels.forEach(lvl => {
+      state[fw][lvl.num] = lvl.qs.map(() => false);
+    });
+  });
+  saveState();
+  renderAll();
+}
+
+// =========================================================
+// MAIN
+// =========================================================
+function renderAll() {
+  renderLadders();
+  renderScores();
+}
+renderOverview();
+renderAll();
+</script>
+</body>
+</html>

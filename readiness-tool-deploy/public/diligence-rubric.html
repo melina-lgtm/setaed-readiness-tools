@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inclusive R&D Due Diligence Rubric — SETA-ED</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root { color-scheme: light;
+  --navy: #1F3A5F; --navy-dark: #142747; --orange: #E8861C;
+  --green: #2E7D5C; --red: #B83A3A; --amber: #C57B0E; --blue: #4A78B5;
+  --bg: #F5F7FA; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B7280;
+  --border: #E5E7EB; --tint: #EEF3F8; --warn: #FFF8EC;
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.5; }
+.wrap { max-width: 1320px; margin: 0 auto; padding: 16px 18px 80px; }
+
+/* HEADER */
+header { display:flex; gap:18px; align-items:center; padding:12px 0 14px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.brand { font-weight:700; color:var(--navy); font-size:14px; letter-spacing:.06em; text-transform:uppercase; }
+.brand .small { color:var(--muted); font-weight:500; text-transform:none; letter-spacing:0; }
+h1 { font-size:18px; color:var(--navy); margin:0; }
+.venture-bar { display:flex; gap:6px; align-items:center; margin-left:auto; flex-wrap:wrap; }
+.venture-bar input, .venture-bar select { padding:6px 10px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:white; }
+.venture-bar select { min-width:200px; }
+.venture-bar input { min-width:200px; }
+.btn { background:var(--navy); color:white; border:none; padding:6px 12px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; }
+.btn:hover { background:var(--navy-dark); }
+.btn.secondary { background:white; color:var(--navy); border:1px solid var(--border); }
+.btn.secondary:hover { background:var(--tint); }
+.btn.danger { background:white; color:var(--red); border:1px solid var(--border); }
+.btn.danger:hover { background:#FEEBEB; }
+.btn.small { padding:4px 8px; font-size:12px; }
+
+/* HOWTO BANNER */
+.howto { display:flex; gap:14px; align-items:flex-start; background:linear-gradient(180deg, #FFF8EC 0%, #FFFCF4 100%); border:1px solid #F2D89A; border-left:4px solid var(--orange); border-radius:8px; padding:12px 16px; margin:14px 0 0; }
+.howto-label { color:var(--orange); font-weight:700; font-size:11px; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; padding-top:2px; min-width:130px; }
+.howto-text { font-size:13px; color:var(--text); line-height:1.55; }
+.howto-text b { color:var(--navy); }
+@media (max-width:680px){ .howto { flex-direction:column; gap:6px; } .howto-label { min-width:0; } }
+
+/* TABS */
+.tabs { display:flex; gap:2px; border-bottom:2px solid var(--border); margin:14px 0 18px; flex-wrap:wrap; }
+.tab { background:none; border:none; padding:10px 14px; font-size:13px; font-weight:600;
+  color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-2px; }
+.tab.active { color:var(--navy); border-bottom-color:var(--orange); }
+.tab:hover { color:var(--navy); }
+.tab .badge { background:var(--orange); color:white; padding:1px 6px; border-radius:8px; font-size:11px; margin-left:4px; }
+
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* HERO INTRO (only shown when no ventures yet) */
+.empty-state { background:var(--card); border:1px dashed var(--border); border-radius:10px; padding:32px; text-align:center; }
+.empty-state h2 { color:var(--navy); margin:0 0 8px; }
+.empty-state p { color:var(--muted); margin:0 0 16px; }
+
+/* SCORE TOP-PANEL */
+.score-bar { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 18px; display:grid; grid-template-columns:auto 1fr auto; gap:18px; align-items:center; margin-bottom:14px; }
+@media (max-width:900px){ .score-bar { grid-template-columns:1fr; } }
+.score-bar .vname { font-size:18px; font-weight:700; color:var(--navy); }
+.score-bar .vmeta { font-size:12px; color:var(--muted); }
+.scoreline { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.score-pill { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:8px 12px; min-width:88px; text-align:center; }
+.score-pill .lab { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+.score-pill .num { font-size:22px; font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
+.score-pill .of { font-size:12px; color:var(--muted); }
+.score-pill.peoml .num { color:var(--blue); }
+.score-pill.proml .num { color:#82A4D0; }
+
+/* LADDERS */
+.ladders { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media (max-width:1100px){ .ladders { grid-template-columns:1fr; } }
+.ladder { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+.ladder h2 { color:var(--navy); margin:0 0 4px; font-size:15px; }
+.ladder .sub { color:var(--muted); font-size:12px; margin-bottom:12px; }
+.rung { border-left:3px solid var(--border); padding:10px 0 8px 14px; margin-left:14px; position:relative; }
+.rung::before { content:""; position:absolute; left:-8px; top:14px; width:12px; height:12px; border-radius:50%; background:var(--card); border:2px solid var(--border); }
+.rung.completed::before { background:var(--green); border-color:var(--green); }
+.rung.current::before { background:var(--orange); border-color:var(--orange); box-shadow:0 0 0 4px rgba(232,134,28,.15); }
+.rung-head { display:flex; gap:8px; align-items:baseline; cursor:pointer; }
+.rung-num { font-weight:700; color:var(--navy); font-size:13px; }
+.rung-name { font-weight:500; font-size:13px; flex:1; }
+.rung-status { font-size:11px; color:var(--muted); white-space:nowrap; }
+.rung.completed .rung-status { color:var(--green); font-weight:600; }
+.rung.current .rung-status { color:var(--orange); font-weight:700; }
+.rung-body { display:none; padding:10px 0 0; }
+.rung.expanded .rung-body { display:block; }
+.rung-desc { font-size:12px; color:var(--muted); margin-bottom:10px; padding:8px; background:var(--tint); border-radius:6px; }
+
+/* QUESTION ITEM */
+.q-item { padding:8px 0; border-top:1px dashed var(--border); }
+.q-item:first-child { border-top:none; }
+.q-text { font-size:12px; margin-bottom:6px; }
+.q-row { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.seg { display:inline-flex; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.seg button { background:white; border:none; padding:4px 9px; font-size:11px; cursor:pointer; color:var(--muted); border-right:1px solid var(--border); }
+.seg button:last-child { border-right:none; }
+.seg button.active { font-weight:700; color:white; }
+.seg button[data-v="0"].active { background:var(--red); }
+.seg button[data-v="1"].active { background:var(--amber); }
+.seg button[data-v="2"].active { background:var(--blue); }
+.seg button[data-v="3"].active { background:var(--green); }
+.q-evidence { width:100%; min-height:32px; padding:5px 8px; font-size:12px; border:1px solid var(--border); border-radius:5px; resize:vertical; font-family:inherit; margin-top:5px; background:#FAFBFC; }
+.q-flag { padding:4px 8px; font-size:11px; border:1px solid var(--border); border-radius:5px; background:white; }
+
+/* LEVEL CONFIDENCE */
+.level-conf { margin-top:8px; padding-top:8px; border-top:1px dashed var(--border); display:flex; gap:8px; align-items:center; font-size:11px; color:var(--muted); }
+.conf-seg { display:inline-flex; border:1px solid var(--border); border-radius:5px; overflow:hidden; }
+.conf-seg button { background:white; border:none; padding:3px 8px; font-size:11px; cursor:pointer; color:var(--muted); border-right:1px solid var(--border); }
+.conf-seg button:last-child { border-right:none; }
+.conf-seg button.active { background:var(--navy); color:white; font-weight:600; }
+
+/* RADAR + RECS */
+.bottom { display:grid; grid-template-columns:340px 1fr; gap:18px; margin-top:16px; }
+@media (max-width:900px){ .bottom { grid-template-columns:1fr; } }
+.radar-card, .rec-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; }
+.radar-card h3, .rec-card h3 { color:var(--navy); margin:0 0 8px; font-size:14px; }
+.recommendations { font-size:13px; }
+.recommendations ul { padding-left:18px; margin:6px 0 0; }
+.recommendations li { margin-bottom:8px; }
+
+/* RISK TABLE */
+.risks-table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.risks-table th { background:var(--tint); color:var(--navy); padding:10px 8px; font-size:12px; text-align:left; }
+.risks-table td { padding:10px 8px; border-top:1px solid var(--border); vertical-align:top; }
+.risks-table input, .risks-table textarea, .risks-table select { width:100%; padding:5px 7px; border:1px solid var(--border); border-radius:5px; font-size:12px; font-family:inherit; background:white; }
+.risks-table textarea { min-height:50px; resize:vertical; }
+.risks-table .status-accepted { color:var(--green); font-weight:600; }
+.risks-table .status-rejected { color:var(--red); font-weight:600; }
+.risks-table .status-review { color:var(--amber); font-weight:600; }
+.risks-toolbar { margin:12px 0; display:flex; gap:8px; }
+
+/* PORTFOLIO TABLE */
+.portfolio-table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+.portfolio-table th { background:var(--tint); color:var(--navy); padding:10px 8px; font-size:12px; text-align:left; }
+.portfolio-table td { padding:10px 8px; border-top:1px solid var(--border); font-size:13px; }
+.portfolio-table .vname-cell { font-weight:600; color:var(--navy); cursor:pointer; }
+.portfolio-table .vname-cell:hover { text-decoration:underline; }
+.minibar { display:inline-block; height:8px; background:var(--border); border-radius:4px; vertical-align:middle; margin-right:6px; position:relative; overflow:hidden; }
+.minibar-fill { height:100%; background:var(--navy); border-radius:4px; }
+.minibar-fill.peoml { background:var(--blue); }
+.minibar-fill.proml { background:#82A4D0; }
+
+/* EXPORT */
+.export-bar { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-top:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.export-bar .info { color:var(--muted); font-size:12px; flex:1; }
+#export-output { display:none; width:100%; min-height:240px; padding:10px; font-family:ui-monospace,Menlo,monospace; font-size:12px; border:1px solid var(--border); border-radius:6px; margin-top:10px; }
+
+/* OVERVIEW */
+.overview-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+@media (max-width:1100px){ .overview-grid { grid-template-columns:1fr; } }
+.overview-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; }
+.overview-card h2 { color:var(--navy); margin:0 0 4px; font-size:15px; }
+.overview-card .sub { color:var(--muted); font-size:12px; margin-bottom:12px; }
+.overview-table { width:100%; border-collapse:collapse; font-size:12px; }
+.overview-table th { text-align:left; background:var(--tint); padding:6px 8px; color:var(--navy); font-weight:600; font-size:11px; }
+.overview-table td { padding:8px; border-top:1px solid var(--border); vertical-align:top; }
+.overview-table td:first-child { width:30px; font-weight:700; color:var(--navy); }
+.overview-table td:nth-child(2) { width:140px; font-weight:500; }
+
+.toast { position:fixed; bottom:20px; right:20px; background:var(--navy); color:white; padding:10px 14px; border-radius:6px; font-size:13px; box-shadow:0 4px 12px rgba(0,0,0,.15); animation:fade 2.4s; }
+@keyframes fade { 0%{ opacity:0;transform:translateY(8px); } 10%,80%{ opacity:1;transform:translateY(0); } 100%{ opacity:0; } }
+#radar-canvas { max-width:100%; height:auto !important; }
+
+/* ANALYZE PANEL */
+.analyze-card { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:24px; max-width:980px; }
+.analyze-card h2 { color:var(--navy); margin:0 0 8px; font-size:18px; }
+.analyze-card .lead { color:var(--muted); font-size:13px; margin-bottom:18px; }
+.analyze-card .step { background:var(--tint); border-left:3px solid var(--orange); padding:10px 14px; margin:14px 0; border-radius:6px; font-size:13px; }
+.analyze-card .step b { color:var(--navy); }
+.upload-row { display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap; }
+.upload-row input[type="file"] { font-size:12px; }
+.upload-row label { font-size:13px; font-weight:600; color:var(--navy); }
+#proposal-text { width:100%; min-height:240px; padding:12px; font-size:13px; border:1px solid var(--border); border-radius:6px; font-family:ui-monospace,Menlo,monospace; resize:vertical; background:#FAFBFC; }
+.analyze-controls { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+.analyze-controls input { flex:1; min-width:200px; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; }
+.analyze-controls .ai-btn { background:linear-gradient(135deg, #1F3A5F, #4A78B5); padding:8px 16px; font-size:13px; }
+.analyze-controls .ai-btn:hover { background:linear-gradient(135deg, #142747, #3A6298); }
+.analyze-controls .ai-btn:disabled { opacity:0.5; cursor:wait; }
+.spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--orange); border-radius:50%; animation:spin 1s linear infinite; vertical-align:middle; margin-right:8px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.analyze-status { margin-top:14px; padding:10px 14px; border-radius:6px; font-size:13px; display:none; }
+.analyze-status.active { display:block; }
+.analyze-status.working { background:#EEF3F8; color:var(--navy); border-left:3px solid var(--blue); }
+.analyze-status.success { background:#E7F5EE; color:var(--green); border-left:3px solid var(--green); }
+.analyze-status.error { background:#FEEBEB; color:var(--red); border-left:3px solid var(--red); }
+.analyze-summary { background:var(--card); border:1px solid var(--border); border-left:4px solid var(--navy); border-radius:6px; padding:14px 16px; margin-top:14px; font-size:13px; }
+.analyze-summary h4 { margin:0 0 6px; color:var(--navy); font-size:13px; }
+.analyze-preview-scoreline { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.analyze-preview-scoreline .score-pill { min-width:80px; }
+.analyze-help { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:12px 14px; font-size:12px; color:var(--muted); margin-top:14px; }
+.analyze-help b { color:var(--navy); }
+.analyze-help ul { margin:6px 0 0; padding-left:20px; }
+.analyze-help li { margin-bottom:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand">SETA-ED · Due Diligence Rubric<div class="small" style="font-weight:500;">Inclusive R&D readiness assessment for funder review teams</div></div>
+  <div class="venture-bar">
+    <select id="venture-select"></select>
+    <input id="venture-name" placeholder="Venture name" />
+    <button class="btn small" onclick="addVenture()">+ Add venture</button>
+    <button class="btn secondary small" onclick="duplicateVenture()">Duplicate</button>
+    <button class="btn danger small" onclick="deleteCurrentVenture()">Delete</button>
+  </div>
+</header>
+
+<div class="howto">
+  <div class="howto-label">For program officers</div>
+  <div class="howto-text">For each applicant, paste their grant proposal into the <b>R&D Readiness Analysis</b> tab to get a draft scorecard across Prototype, People, and Process readiness plus a populated DARPA-style risk plan. Refine the scores and evidence notes in the <b>Assessment</b> and <b>Risk Plan</b> tabs, compare ventures in <b>Portfolio</b>, and export any scorecard as Markdown for your review team.</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" data-tab="analyze">R&D Readiness Analysis</button>
+  <button class="tab" data-tab="assess">Assessment</button>
+  <button class="tab" data-tab="risks">Risk Plan</button>
+  <button class="tab" data-tab="portfolio">Portfolio</button>
+  <button class="tab" data-tab="reference">Frameworks reference</button>
+  <button class="tab" data-tab="example">Worked example</button>
+</div>
+
+<!-- ANALYZE PROPOSAL -->
+<div class="panel active" id="panel-analyze">
+  <div class="analyze-card">
+    <h2>R&D Readiness Analysis</h2>
+    <p class="lead">An evidence-based readiness assessment defined by SETA-ED and adapted from the R&D portfolio practices of DARPA, ARPA-E, and other Advanced Research Project Agencies. Paste a grant proposal (or upload a .txt file) to receive a complete draft assessment against the three Inclusive R&D readiness frameworks — Prototype, People, and Process — with evidence quotes for every rubric question and an automated risk inventory based on the proposal.</p>
+
+    <div class="step"><b>Step 1.</b> Paste the proposal text below. For .docx or .pdf files, open in Word/Preview, select all (⌘/Ctrl+A), and copy-paste here. For .txt files, use the upload button.</div>
+
+    <div class="upload-row">
+      <label for="proposal-file">Upload .txt:</label>
+      <input type="file" id="proposal-file" accept=".txt,text/plain" onchange="loadFromFile(event)">
+      <span style="color:var(--muted); font-size:12px;">→ populates the textarea below</span>
+    </div>
+
+    <textarea id="proposal-text" placeholder="Paste proposal text here (or upload a .txt file above)..."></textarea>
+
+    <div class="step"><b>Step 2.</b> Name the venture and run the analysis. The system performs two passes: a readiness scoring pass against all 57 rubric questions, then a risk identification pass that maps proposal content to the DARPA-style risk plan structure.</div>
+
+    <div class="analyze-controls">
+      <input id="analyze-venture-name" placeholder="Venture name (e.g., 'WriteAhead Inc.')" />
+      <button class="btn ai-btn" id="analyze-btn" onclick="runAnalysis()">▶ Run R&D Readiness Analysis</button>
+    </div>
+
+    <div class="analyze-status" id="analyze-status"></div>
+    <div id="analyze-results"></div>
+
+    <div class="analyze-help">
+      <b>What the R&D Readiness Analysis returns:</b>
+      <ul>
+        <li><b>Pass 1 — Readiness scoring.</b> A score (No / Weak / Strong / Yes) for every PRL, PeoML, and ProML question, with a short evidence quote or paraphrase from the proposal supporting each score, and an overall summary of readiness across the three dimensions.</li>
+        <li><b>Pass 2 — Risk inventory.</b> A populated DARPA-style risk plan: 4–7 risk categories surfaced from the proposal, each with the venture's stated short-term mitigation, their long-term mitigation plan, and a reviewer-facing confidence rating in the strength of that mitigation.</li>
+        <li>The whole assessment applied to a new venture in your portfolio — ready for you to review and refine.</li>
+      </ul>
+      <div style="margin-top:10px;"><b>Conservative scoring.</b> The analysis is calibrated to score honestly — most ventures overstate their readiness, and the framework's value is in catching that. When the proposal mentions something only briefly or aspirationally, expect "Weak" rather than "Strong." Always re-read the evidence quotes and adjust scores where your judgment differs.</div>
+      <div style="margin-top:10px;"><b>Methodology.</b> The R&D Readiness Analysis is run by a language model executing the SETA-ED rubric. Proposal text is processed in real time and not retained beyond the venture's local record in this browser. The methodology — not the model — is the source of authority: the rubric, scoring anchors, and risk taxonomy were defined by Dr. Melina Uncapher (SETA-ED) drawing on AERDF and ARPA risk-management practice.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div class="panel" id="panel-assess">
+  <div id="empty-assess" class="empty-state" style="display:none;">
+    <h2>Add a venture to start</h2>
+    <p>Enter a venture name above and click "Add venture" to begin a due-diligence assessment.</p>
+  </div>
+  <div id="assess-body">
+    <div class="score-bar">
+      <div>
+        <div class="vname" id="vbar-name"></div>
+        <div class="vmeta" id="vbar-meta"></div>
+      </div>
+      <div class="scoreline" id="vbar-scores"></div>
+      <div>
+        <button class="btn secondary small" onclick="exportScorecard()">Copy scorecard</button>
+      </div>
+    </div>
+    <div class="ladders" id="ladders"></div>
+    <div class="bottom">
+      <div class="radar-card">
+        <h3>Three-dimensional readiness</h3>
+        <canvas id="radar-canvas" width="300" height="300"></canvas>
+      </div>
+      <div class="rec-card">
+        <h3>Reviewer summary</h3>
+        <div class="recommendations" id="recommendations"></div>
+      </div>
+    </div>
+    <div class="export-bar">
+      <div class="info">Export this venture's scorecard as Markdown for sharing with the review team.</div>
+      <button class="btn" onclick="exportScorecard(true)">Show export</button>
+      <button class="btn secondary" onclick="exportScorecard()">Copy to clipboard</button>
+    </div>
+    <textarea id="export-output" readonly></textarea>
+  </div>
+</div>
+
+<!-- RISKS -->
+<div class="panel" id="panel-risks">
+  <div id="empty-risks" class="empty-state" style="display:none;">
+    <h2>Add a venture first</h2>
+    <p>The risk plan is per-venture. Add a venture from the top bar to begin.</p>
+  </div>
+  <div id="risks-body">
+    <div style="background:var(--warn); border-left:4px solid var(--orange); padding:12px 16px; border-radius:6px; margin-bottom:14px; font-size:13px;">
+      <b>DARPA-style risk methodology:</b> for each risk, identify the category, decide whether the venture (and you as funder) are willing to accept it, and document explicit short-term and long-term mitigations. Risks without mitigations should be flagged for review or rejected.
+    </div>
+    <table class="risks-table">
+      <thead><tr>
+        <th style="width:170px;">Risk category</th>
+        <th style="width:110px;">Status</th>
+        <th>Short-term mitigation</th>
+        <th>Long-term mitigation</th>
+        <th style="width:90px;">Confidence</th>
+        <th style="width:50px;"></th>
+      </tr></thead>
+      <tbody id="risks-tbody"></tbody>
+    </table>
+    <div class="risks-toolbar">
+      <button class="btn" onclick="addRisk()">+ Add risk</button>
+      <button class="btn secondary small" onclick="addStandardRisks()">+ Add standard categories</button>
+    </div>
+  </div>
+</div>
+
+<!-- PORTFOLIO -->
+<div class="panel" id="panel-portfolio">
+  <div id="portfolio-empty" class="empty-state" style="display:none;">
+    <h2>No ventures yet</h2>
+    <p>Add ventures from the top bar to see them compared here.</p>
+  </div>
+  <div id="portfolio-body">
+    <div style="margin-bottom:12px; color:var(--muted); font-size:13px;">
+      Click any venture name to switch to its assessment. Sort by clicking column headers.
+    </div>
+    <table class="portfolio-table">
+      <thead><tr>
+        <th>Venture</th>
+        <th>PRL</th>
+        <th>PeoML</th>
+        <th>ProML</th>
+        <th>Risks logged</th>
+        <th>Confidence</th>
+        <th>Updated</th>
+      </tr></thead>
+      <tbody id="portfolio-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- REFERENCE -->
+<div class="panel" id="panel-reference">
+  <div class="overview-grid" id="overview-grid"></div>
+  <div style="margin-top:18px; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; font-size:13px; color:var(--muted);">
+    <b style="color:var(--navy);">Scoring legend.</b> For each rubric question, score the venture's evidence:
+    <span style="display:inline-block; padding:2px 8px; background:var(--red); color:white; border-radius:4px; font-size:11px; font-weight:600; margin:0 4px;">No</span> no evidence at all ·
+    <span style="display:inline-block; padding:2px 8px; background:var(--amber); color:white; border-radius:4px; font-size:11px; font-weight:600; margin:0 4px;">Weak</span> some evidence but not at the level the question asks ·
+    <span style="display:inline-block; padding:2px 8px; background:var(--blue); color:white; border-radius:4px; font-size:11px; font-weight:600; margin:0 4px;">Strong</span> clear evidence at the level the question asks ·
+    <span style="display:inline-block; padding:2px 8px; background:var(--green); color:white; border-radius:4px; font-size:11px; font-weight:600; margin:0 4px;">Yes</span> documented evidence with citation/artifact.
+    A level is "achieved" when every question at that level scores Strong or Yes <i>and</i> every level below is achieved.
+  </div>
+</div>
+
+<!-- EXAMPLE -->
+<div class="panel" id="panel-example">
+  <div style="background:var(--card); border:1px solid var(--border); border-radius:10px; padding:24px; max-width:900px;">
+    <h2 style="color:var(--navy); margin:0 0 8px;">WriteAhead — worked example</h2>
+    <p style="color:var(--muted); font-size:13px; margin:0 0 18px;">A hypothetical AI-powered writing feedback tool for multilingual learners. Two co-founders, 15 students of pilot data, no formal evidence yet.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      <div style="background:var(--bg); border-left:4px solid var(--navy); border-radius:8px; padding:14px;">
+        <h3 style="color:var(--navy); margin:0 0 8px; font-size:14px;">Today (engagement start)</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;">
+          <div class="score-pill"><div class="lab">PRL</div><div class="num">3</div></div>
+          <div class="score-pill"><div class="lab">PeoML</div><div class="num">1</div></div>
+          <div class="score-pill"><div class="lab">ProML</div><div class="num">1</div></div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin:10px 0 0;">Prototype works in one classroom. Equity stated but not operationalized.</p>
+      </div>
+      <div style="background:var(--bg); border-left:4px solid var(--green); border-radius:8px; padding:14px;">
+        <h3 style="color:var(--navy); margin:0 0 8px; font-size:14px;">12 months later (target)</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;">
+          <div class="score-pill"><div class="lab">PRL</div><div class="num">5</div></div>
+          <div class="score-pill"><div class="lab">PeoML</div><div class="num">2</div></div>
+          <div class="score-pill"><div class="lab">ProML</div><div class="num">2</div></div>
+        </div>
+        <p style="font-size:12px; color:var(--muted); margin:10px 0 0;">Medium-fidelity prototype validated. Community consultation mechanism documented. Equity-driven design trail in place.</p>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--muted); margin-top:18px; padding:12px; background:var(--bg); border-radius:6px;">
+      <b>The point for due diligence:</b> ventures whose three readiness scores move <i>together</i> are the credible ones. A venture proposing a leap from PRL 3 to PRL 7 in one cycle (without People and Process advancing) is sandbagging or oversoiling. Use the rubric to surface this gap before committing funding.
+    </p>
+    <div style="margin-top:18px;">
+      <button class="btn" onclick="loadWriteAheadExample()">Load WriteAhead as a venture</button>
+      <span style="margin-left:8px; font-size:12px; color:var(--muted);">Adds a pre-filled venture so you can explore the rubric with realistic data.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// =========================================================
+// DATA
+// =========================================================
+const FRAMEWORKS = {
+  prl: {
+    title:'Prototype Readiness', sub:'PRL · 9 levels · prototype maturity', color:'#1F3A5F', maxLvl:9,
+    levels: [
+      { num:1, name:'Basic Research', desc:'Idea grounded in research; no prototype yet.', qs:[
+        'Is the idea grounded in specific, citable research from learning science, cognitive science, or a related field?',
+        'Can the team articulate the mechanism by which the idea is expected to improve a specific learner or educator outcome?',
+        'Has the team documented the prior research that supports their theory of change, even informally?',
+      ]},
+      { num:2, name:'Applied Research', desc:'Specific application concept formulated; still speculative.', qs:[
+        'Has the team translated their research grounding into a specific, concrete application concept?',
+        'Can the team describe the specific educational activity their application is intended to enhance or replace?',
+        'Has the team identified, at least on paper, which components would need to exist for it to work?',
+      ]},
+      { num:3, name:'Proof of Application Concept', desc:'Components tested in isolation; feasibility study completed.', qs:[
+        'Have individual components of the application been tested in isolation (not yet integrated)?',
+        'Has the team completed a feasibility study showing the concept could plausibly work?',
+        'Is there a detailed characterization of the user process the application supports, including baseline performance before the application?',
+      ]},
+      { num:4, name:'Initial Prototype & Verification', desc:'Low-fidelity integrated prototype, lab-like testing.', qs:[
+        'Has the team built an integrated prototype (even low-fidelity) where components work together?',
+        'Has the prototype been demonstrated in a lab-like environment (not yet a real classroom)?',
+        'Has the team identified the organizational and human-process issues a real deployment will need to address?',
+      ]},
+      { num:5, name:'Validation in Relevant Environment', desc:'Medium-fidelity prototype, simulated classroom validation.', qs:[
+        'Has a medium-fidelity prototype been tested in a simulated or closely-approximating classroom environment?',
+        'Can the team articulate, with evidence, the specific performance improvement the application could achieve?',
+        'Has the team defined what scaling would require (technical, operational, data)?',
+      ]},
+      { num:6, name:'Demonstration in Relevant Environment', desc:'High-fidelity prototype, simulated operational env.', qs:[
+        'Has the high-fidelity prototype been beta-tested in a simulated operational environment?',
+        'Has the team demonstrated (not merely projected) performance improvements in that environment?',
+        'Are any components already running in end-user environments?',
+      ]},
+      { num:7, name:'Application Prototype in Operational Environment', desc:'Real classroom integration with school systems.', qs:[
+        'Is the prototype running in a real classroom, integrated with the actual systems and workflows of the school?',
+        'Has functionality been demonstrated to educators and students using it (not just promised)?',
+        'Has the team worked out most of the major bugs and integration issues that surfaced during deployment?',
+      ]},
+      { num:8, name:'Application Completed & Qualified', desc:'Product fully built; qualified by school partners.', qs:[
+        'Is the product fully built in its intended final form, with user / training / maintenance documentation?',
+        'Has a school partner formally qualified or approved the product for ongoing use?',
+        'Has V&V testing been completed against target outcomes?',
+      ]},
+      { num:9, name:'Sustained, Scaled Use', desc:'Sustained scaled use across many real classrooms.', qs:[
+        'Is the product in sustained, repeated use across multiple schools and classrooms over time?',
+        'Is use occurring in schools serving priority student populations, with outcome data being collected?',
+        'Is there sustaining engineering, customer support, and continuous improvement infrastructure in place?',
+      ]},
+    ],
+  },
+  peoml: {
+    title:'People Readiness', sub:'PeoML · 5 levels · team & community', color:'#4A78B5', maxLvl:5,
+    levels: [
+      { num:1, name:'Equity stated', desc:'Equity named as a value but not yet operationalized in team/consultation.', qs:[
+        'Is equity (including the priority population) named explicitly in the mission, theory of change, or external materials?',
+        'Can the team articulate, beyond marketing language, what equity means for their specific R&D project?',
+        'Is at least one team member explicitly responsible for equity (not as a side role, but as an accountable function)?',
+      ]},
+      { num:2, name:'Community informed', desc:'Community consulted at key R&D moments, but consultation is one-directional.', qs:[
+        'Have community members from the priority population been consulted on concept and approach (not just user-tested)?',
+        'Have those consultations shaped at least one substantive design decision in a way that can be documented?',
+        'Is there a documented mechanism for ongoing community consultation, not just one-time interviews?',
+      ]},
+      { num:3, name:'Community present', desc:'Community members in formal R&D and team functions.', qs:[
+        'Do community members from the priority population hold formal, paid roles on team or advisory structure?',
+        'Are community members present in defined R&D moments (prototype review, evidence interpretation, roadmap planning)?',
+        "Does the team's composition itself (not just advisors) reflect the population, including in technical and decision-making roles?",
+      ]},
+      { num:4, name:'Community partnership', desc:'Community as co-leaders with documented decision rights.', qs:[
+        'Are community members co-leaders on substantive R&D decisions, with documented decision rights (not just "input")?',
+        'Is community accountability symmetric: community partners accountable for outcomes alongside founders, with shared metrics?',
+        'Are community partners compensated commensurate with their decision-making role (not at consultant or honorarium rates)?',
+      ]},
+      { num:5, name:'Community co-ownership', desc:'Community holds decision-making power and equity in outcomes.', qs:[
+        'Do governance documents (bylaws, board composition, equity arrangements) reflect community standing as co-owners?',
+        'Is decision-making power shared on the most consequential decisions (pivots, scale, monetization, IP)?',
+        'Is there a revenue / equity / asset-sharing arrangement that gives the community a stake in long-term value?',
+      ]},
+    ],
+  },
+  proml: {
+    title:'Process Readiness', sub:'ProML · 5 levels · R&D-cycle equity', color:'#82A4D0', maxLvl:5,
+    levels: [
+      { num:1, name:'Equity defined', desc:'Equity goals explicit, measurable, tied to specific population.', qs:[
+        'Are equity goals explicit and measurable (specific subgroups, outcomes, decisions they should shape)?',
+        'Can the team articulate which subgroup-level outcomes the project is responsible for (not just population averages)?',
+        'Is at least one team member accountable for keeping equity goals visible across phases (not just at concept stage)?',
+      ]},
+      { num:2, name:'Equity in design', desc:'Design choices systematically reflect equity goals.', qs:[
+        'Have design choices in at least one current phase been visibly shaped by equity considerations, with a documented decision trail?',
+        'Does the R&D plan explicitly address how design choices serve—or fail to serve—the priority subgroups?',
+        'Are equity-relevant tensions named explicitly in design decisions, rather than glossed over?',
+      ]},
+      { num:3, name:'Equity in data', desc:'Data designed for disaggregation and subgroup learning.', qs:[
+        'Is data collection designed from the start to support disaggregation by all priority subgroups?',
+        'Are sample sizes and recruitment plans powered for subgroup analysis (not just average effects)?',
+        'Does the analysis plan pre-specify subgroup questions before data collection?',
+      ]},
+      { num:4, name:'Equity in iteration', desc:'Iteration cycles use subgroup evidence to improve the prototype.', qs:[
+        'When subgroup analysis reveals differential effects, does the R&D process respond with documented design or measurement changes?',
+        'Are iteration decisions adjudicated against equity criteria, not just average performance?',
+        'Is there a mechanism for community partners and team members to raise equity concerns mid-cycle and have them acted on?',
+      ]},
+      { num:5, name:'Equity in dissemination & governance', desc:'Findings and decision rights flow to communities served.', qs:[
+        'Are findings disseminated to communities in formats and languages they can use (not only to funders/academia)?',
+        'Do decisions about scaling, monetization, and continued use reflect input or shared decision rights with the population served?',
+        'Is there a governance mechanism (board representation, community standing) that gives the community continuing standing?',
+      ]},
+    ],
+  },
+};
+
+const SCORE_LABELS = ['No', 'Weak', 'Strong', 'Yes'];
+const STORAGE_KEY = 'setaed-diligence-v2';
+const STANDARD_RISKS = [
+  { category:'Evidence development', shortTerm:'', longTerm:'', confidence:'medium' },
+  { category:'School access / district recruitment', shortTerm:'', longTerm:'', confidence:'medium' },
+  { category:'AI deployment (model drift, bias, privacy)', shortTerm:'', longTerm:'', confidence:'medium' },
+  { category:'Adoption / district purchase', shortTerm:'', longTerm:'', confidence:'medium' },
+  { category:'Team continuity / key-person dependency', shortTerm:'', longTerm:'', confidence:'medium' },
+  { category:'Equity-execution risk', shortTerm:'', longTerm:'', confidence:'medium' },
+];
+
+// =========================================================
+// STATE
+// =========================================================
+let state = loadState();
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { ventures: {}, currentId: null };
+}
+function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){} }
+
+function blankVenture(name) {
+  const id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+  const q = {}, evidence = {}, flag = {}, conf = {};
+  Object.keys(FRAMEWORKS).forEach(fw => {
+    q[fw] = {}; evidence[fw] = {}; flag[fw] = {}; conf[fw] = {};
+    FRAMEWORKS[fw].levels.forEach(lvl => {
+      q[fw][lvl.num] = lvl.qs.map(()=>0);
+      evidence[fw][lvl.num] = lvl.qs.map(()=>'');
+      flag[fw][lvl.num] = lvl.qs.map(()=>'');
+      conf[fw][lvl.num] = '';
+    });
+  });
+  return { id, name: name||'Untitled venture', createdAt: Date.now(), updatedAt: Date.now(), q, evidence, flag, conf, risks: [], notes: '' };
+}
+
+function getCurrent() { return state.currentId ? state.ventures[state.currentId] : null; }
+function touch() { const v = getCurrent(); if (v) v.updatedAt = Date.now(); saveState(); }
+
+// =========================================================
+// SCORING
+// =========================================================
+function levelAchieved(fw, lvl, v) {
+  if (!v) return false;
+  const ans = v.q[fw][lvl] || [];
+  if (!ans.length) return false;
+  return ans.every(s => s >= 2);
+}
+function fwScore(fw, v) {
+  if (!v) return 0;
+  let highest = 0;
+  for (let lvl = 1; lvl <= FRAMEWORKS[fw].maxLvl; lvl++) {
+    if (levelAchieved(fw, lvl, v)) highest = lvl; else break;
+  }
+  return highest;
+}
+
+// =========================================================
+// VENTURE MANAGEMENT
+// =========================================================
+function addVenture() {
+  const nameInput = document.getElementById('venture-name');
+  const name = (nameInput.value || '').trim() || 'Untitled venture';
+  const v = blankVenture(name);
+  state.ventures[v.id] = v;
+  state.currentId = v.id;
+  nameInput.value = '';
+  saveState();
+  renderAll();
+  toast(`Added "${name}"`);
+}
+function deleteCurrentVenture() {
+  const v = getCurrent();
+  if (!v) return;
+  if (!confirm(`Delete "${v.name}"? This cannot be undone.`)) return;
+  delete state.ventures[v.id];
+  const remaining = Object.keys(state.ventures);
+  state.currentId = remaining.length ? remaining[0] : null;
+  saveState();
+  renderAll();
+  toast('Venture deleted');
+}
+function duplicateVenture() {
+  const v = getCurrent();
+  if (!v) return;
+  const copy = JSON.parse(JSON.stringify(v));
+  copy.id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+  copy.name = v.name + ' (copy)';
+  copy.createdAt = Date.now();
+  copy.updatedAt = Date.now();
+  state.ventures[copy.id] = copy;
+  state.currentId = copy.id;
+  saveState();
+  renderAll();
+  toast('Venture duplicated');
+}
+function switchVenture(id) {
+  state.currentId = id;
+  saveState();
+  renderAll();
+}
+
+// =========================================================
+// RISK MANAGEMENT
+// =========================================================
+function addRisk(preset) {
+  const v = getCurrent(); if (!v) return;
+  const r = preset || { category:'', shortTerm:'', longTerm:'', confidence:'medium', status:'review' };
+  if (!r.status) r.status = 'review';
+  r.id = 'r_' + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+  v.risks.push(r);
+  touch(); renderRisks(); renderPortfolio();
+}
+function addStandardRisks() {
+  const v = getCurrent(); if (!v) return;
+  STANDARD_RISKS.forEach(r => addRisk({...r, status:'review'}));
+}
+function deleteRisk(id) {
+  const v = getCurrent(); if (!v) return;
+  v.risks = v.risks.filter(r => r.id !== id);
+  touch(); renderRisks(); renderPortfolio();
+}
+function updateRisk(id, field, val) {
+  const v = getCurrent(); if (!v) return;
+  const r = v.risks.find(x => x.id === id);
+  if (r) { r[field] = val; touch(); renderPortfolio(); }
+}
+
+// =========================================================
+// RENDER
+// =========================================================
+function renderHeader() {
+  const sel = document.getElementById('venture-select');
+  const ids = Object.keys(state.ventures);
+  if (!ids.length) {
+    sel.innerHTML = '<option>(no ventures yet)</option>';
+    sel.disabled = true;
+  } else {
+    sel.disabled = false;
+    sel.innerHTML = ids.map(id => `<option value="${id}" ${id===state.currentId?'selected':''}>${escapeHtml(state.ventures[id].name)}</option>`).join('');
+    sel.onchange = e => switchVenture(e.target.value);
+  }
+}
+
+function renderAssessment() {
+  const v = getCurrent();
+  document.getElementById('empty-assess').style.display = v ? 'none' : 'block';
+  document.getElementById('assess-body').style.display = v ? 'block' : 'none';
+  if (!v) return;
+
+  document.getElementById('vbar-name').textContent = v.name;
+  document.getElementById('vbar-meta').textContent =
+    'Created ' + fmt(v.createdAt) + ' · Updated ' + fmt(v.updatedAt) + ' · ' + v.risks.length + ' risk' + (v.risks.length===1?'':'s') + ' logged';
+
+  const prl = fwScore('prl', v), peoml = fwScore('peoml', v), proml = fwScore('proml', v);
+  document.getElementById('vbar-scores').innerHTML = `
+    <div class="score-pill"><div class="lab">PRL</div><div class="num">${prl}<span class="of"> / 9</span></div></div>
+    <div class="score-pill peoml"><div class="lab">PeoML</div><div class="num">${peoml}<span class="of"> / 5</span></div></div>
+    <div class="score-pill proml"><div class="lab">ProML</div><div class="num">${proml}<span class="of"> / 5</span></div></div>`;
+
+  // Ladders
+  const root = document.getElementById('ladders');
+  root.innerHTML = '';
+  Object.keys(FRAMEWORKS).forEach(fwKey => {
+    const fw = FRAMEWORKS[fwKey];
+    const score = fwScore(fwKey, v);
+    const col = document.createElement('div');
+    col.className = 'ladder';
+    col.innerHTML = `<h2>${fw.title}</h2><div class="sub">${fw.sub}</div>`;
+    fw.levels.forEach(lvl => {
+      const isCompleted = lvl.num <= score;
+      const isCurrent = lvl.num === score + 1;
+      const status = isCompleted ? '✓ achieved' : (isCurrent ? 'next up' : '');
+      const conf = v.conf[fwKey][lvl.num] || '';
+      const rung = document.createElement('div');
+      rung.className = 'rung' + (isCompleted ? ' completed' : '') + (isCurrent ? ' current' : '');
+      rung.innerHTML = `
+        <div class="rung-head" onclick="this.parentElement.classList.toggle('expanded')">
+          <span class="rung-num">${lvl.num}</span>
+          <span class="rung-name">${lvl.name}</span>
+          <span class="rung-status">${status}</span>
+        </div>
+        <div class="rung-body">
+          <div class="rung-desc">${lvl.desc}</div>
+          ${lvl.qs.map((q,i)=>{
+            const sc = v.q[fwKey][lvl.num][i];
+            return `<div class="q-item">
+              <div class="q-text">${q}</div>
+              <div class="q-row">
+                <div class="seg">
+                  ${SCORE_LABELS.map((lab,j)=>`<button data-v="${j}" class="${sc===j?'active':''}" onclick="setQ('${fwKey}',${lvl.num},${i},${j})">${lab}</button>`).join('')}
+                </div>
+                <input class="q-flag" placeholder="Flag (e.g., follow-up, unclear)" value="${escapeHtml(v.flag[fwKey][lvl.num][i]||'')}" onchange="setFlag('${fwKey}',${lvl.num},${i},this.value)">
+              </div>
+              <textarea class="q-evidence" placeholder="Evidence (artifact, proposal section, interview moment...)" onchange="setEvidence('${fwKey}',${lvl.num},${i},this.value)">${escapeHtml(v.evidence[fwKey][lvl.num][i]||'')}</textarea>
+            </div>`;
+          }).join('')}
+          <div class="level-conf">
+            <span>Reviewer confidence in this level's score:</span>
+            <div class="conf-seg">
+              ${['low','medium','high'].map(c=>`<button class="${conf===c?'active':''}" onclick="setConf('${fwKey}',${lvl.num},'${c}')">${c}</button>`).join('')}
+              ${conf?`<button class="${conf===''?'active':''}" onclick="setConf('${fwKey}',${lvl.num},'')" style="border-left:1px solid var(--border); background:white; color:var(--muted);">clear</button>`:''}
+            </div>
+          </div>
+        </div>`;
+      col.appendChild(rung);
+    });
+    root.appendChild(col);
+  });
+
+  renderRecommendations(v, prl, peoml, proml);
+  renderRadar(prl, peoml, proml);
+}
+
+function renderRecommendations(v, prl, peoml, proml) {
+  const root = document.getElementById('recommendations');
+  const items = [];
+
+  // Overall stance
+  const norms = { prl: prl/9, peoml: peoml/5, proml: proml/5 };
+  const sorted = Object.entries(norms).sort((a,b)=>a[1]-b[1]);
+  const weakest = sorted[0][0];
+  const strongest = sorted[2][0];
+  const labels = { prl:'Prototype (PRL)', peoml:'People (PeoML)', proml:'Process (ProML)' };
+
+  if (prl + peoml + proml === 0) {
+    items.push('No questions scored yet. Begin with PRL Level 1 — the framework is designed to surface honest calibration; reviewers usually find ventures overstate by one to two levels.');
+  } else {
+    items.push(`Overall picture: <b>weakest</b> on ${labels[weakest]}, <b>strongest</b> on ${labels[strongest]}.`);
+    if (prl >= 4 && peoml <= 1) {
+      items.push('⚠ <b>Pattern: prototype-ahead, people-behind.</b> This is the single most predictive failure pattern in education R&D — the venture is building something for a community whose members are not at the table. Recommend conditioning any commitment on a credible PeoML 2 plan.');
+    }
+    if (prl >= 4 && proml <= 1) {
+      items.push('⚠ <b>Pattern: equity stated, not operationalized.</b> The R&D process surfaces equity evidence only at reporting time. Recommend conditioning any commitment on a documented equity-design decision trail (ProML 2).');
+    }
+  }
+
+  // Risk count + confidence summary
+  if (v.risks.length === 0) {
+    items.push('No risks logged yet. Add risk categories from the Risk Plan tab to make the assessment defensible.');
+  } else {
+    const lowConf = v.risks.filter(r => r.confidence === 'low').length;
+    const blocking = v.risks.filter(r => r.status === 'rejected').length;
+    items.push(`${v.risks.length} risk${v.risks.length===1?'':'s'} logged · ${blocking} blocking · ${lowConf} with low-confidence mitigations.`);
+  }
+
+  // Confidence summary across levels
+  let lowConfLevels = 0, totalScored = 0;
+  Object.keys(FRAMEWORKS).forEach(fw => {
+    FRAMEWORKS[fw].levels.forEach(l => {
+      const c = v.conf[fw][l.num];
+      if (c) { totalScored++; if (c === 'low') lowConfLevels++; }
+    });
+  });
+  if (totalScored > 0) {
+    items.push(`Reviewer confidence rated on ${totalScored} levels · ${lowConfLevels} flagged low confidence.`);
+  }
+
+  root.innerHTML = '<ul>' + items.map(i=>`<li>${i}</li>`).join('') + '</ul>';
+}
+
+let chart = null;
+function renderRadar(prl, peoml, proml) {
+  const ctx = document.getElementById('radar-canvas');
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type:'radar',
+    data:{
+      labels:['Prototype','People','Process'],
+      datasets:[{
+        label:'Readiness', data:[prl/9*100, peoml/5*100, proml/5*100],
+        backgroundColor:'rgba(31,58,95,0.18)', borderColor:'#1F3A5F', borderWidth:2,
+        pointBackgroundColor:'#E8861C', pointBorderColor:'#fff', pointRadius:5,
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:true,
+      plugins:{
+        legend:{display:false},
+        tooltip:{ callbacks:{ label: ctx => {
+          const labs=['PRL','PeoML','ProML']; const max=[9,5,5]; const raw=[prl,peoml,proml];
+          return labs[ctx.dataIndex]+': '+raw[ctx.dataIndex]+' / '+max[ctx.dataIndex];
+        }}}
+      },
+      scales:{ r:{ min:0, max:100, ticks:{display:false, stepSize:25}, grid:{color:'#E5E7EB'}, angleLines:{color:'#E5E7EB'}, pointLabels:{font:{size:13,weight:'600'},color:'#1F3A5F'} }}
+    }
+  });
+}
+
+function renderRisks() {
+  const v = getCurrent();
+  document.getElementById('empty-risks').style.display = v ? 'none' : 'block';
+  document.getElementById('risks-body').style.display = v ? 'block' : 'none';
+  if (!v) return;
+  const tbody = document.getElementById('risks-tbody');
+  if (!v.risks.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px; color:var(--muted); font-size:13px;">No risks logged for this venture. Click <b>"+ Add risk"</b> or <b>"+ Add standard categories"</b> to begin.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = v.risks.map(r => `
+    <tr>
+      <td><input value="${escapeHtml(r.category||'')}" onchange="updateRisk('${r.id}','category',this.value)" placeholder="Risk category"></td>
+      <td>
+        <select onchange="updateRisk('${r.id}','status',this.value); this.className='status-'+this.value;" class="status-${r.status||'review'}">
+          <option value="review" ${r.status==='review'?'selected':''}>Under review</option>
+          <option value="accepted" ${r.status==='accepted'?'selected':''}>Accepted</option>
+          <option value="rejected" ${r.status==='rejected'?'selected':''}>Rejected/blocking</option>
+        </select>
+      </td>
+      <td><textarea onchange="updateRisk('${r.id}','shortTerm',this.value)" placeholder="What the venture is doing now to manage this">${escapeHtml(r.shortTerm||'')}</textarea></td>
+      <td><textarea onchange="updateRisk('${r.id}','longTerm',this.value)" placeholder="What the venture's plan is over the engagement horizon">${escapeHtml(r.longTerm||'')}</textarea></td>
+      <td>
+        <select onchange="updateRisk('${r.id}','confidence',this.value)">
+          <option value="low" ${r.confidence==='low'?'selected':''}>low</option>
+          <option value="medium" ${r.confidence==='medium'?'selected':''}>medium</option>
+          <option value="high" ${r.confidence==='high'?'selected':''}>high</option>
+        </select>
+      </td>
+      <td><button class="btn danger small" onclick="deleteRisk('${r.id}')">×</button></td>
+    </tr>
+  `).join('');
+}
+
+function renderPortfolio() {
+  const ids = Object.keys(state.ventures);
+  document.getElementById('portfolio-empty').style.display = ids.length ? 'none' : 'block';
+  document.getElementById('portfolio-body').style.display = ids.length ? 'block' : 'none';
+  if (!ids.length) return;
+  const tbody = document.getElementById('portfolio-tbody');
+  tbody.innerHTML = ids.map(id => {
+    const v = state.ventures[id];
+    const prl = fwScore('prl', v), peoml = fwScore('peoml', v), proml = fwScore('proml', v);
+    let confSummary = 'no rating';
+    let confCount = 0, lowCount = 0;
+    Object.keys(FRAMEWORKS).forEach(fw => {
+      FRAMEWORKS[fw].levels.forEach(l => {
+        const c = v.conf[fw][l.num];
+        if (c) { confCount++; if (c==='low') lowCount++; }
+      });
+    });
+    if (confCount > 0) confSummary = lowCount > 0 ? `${lowCount} low / ${confCount} rated` : `${confCount} rated`;
+    return `<tr>
+      <td class="vname-cell" onclick="switchVenture('${id}'); switchTab('assess')">${escapeHtml(v.name)}</td>
+      <td><span class="minibar" style="width:60px;"><span class="minibar-fill" style="width:${prl/9*100}%;"></span></span>${prl}/9</td>
+      <td><span class="minibar" style="width:60px;"><span class="minibar-fill peoml" style="width:${peoml/5*100}%;"></span></span>${peoml}/5</td>
+      <td><span class="minibar" style="width:60px;"><span class="minibar-fill proml" style="width:${proml/5*100}%;"></span></span>${proml}/5</td>
+      <td>${v.risks.length}</td>
+      <td>${confSummary}</td>
+      <td style="color:var(--muted);">${fmt(v.updatedAt)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderOverview() {
+  const root = document.getElementById('overview-grid');
+  root.innerHTML = '';
+  Object.keys(FRAMEWORKS).forEach(fwKey => {
+    const fw = FRAMEWORKS[fwKey];
+    const card = document.createElement('div');
+    card.className = 'overview-card';
+    card.innerHTML = `<h2>${fw.title}</h2><div class="sub">${fw.sub}</div>
+      <table class="overview-table"><thead><tr><th>#</th><th>Stage</th><th>What it means</th></tr></thead>
+      <tbody>${fw.levels.map(l=>`<tr><td>${l.num}</td><td>${l.name}</td><td>${l.desc}</td></tr>`).join('')}</tbody></table>`;
+    root.appendChild(card);
+  });
+}
+
+// =========================================================
+// SETTERS
+// =========================================================
+function setQ(fw, lvl, qi, val) {
+  const v = getCurrent(); if (!v) return;
+  v.q[fw][lvl][qi] = val;
+  touch(); renderAssessment(); renderPortfolio();
+}
+function setEvidence(fw, lvl, qi, val) {
+  const v = getCurrent(); if (!v) return;
+  v.evidence[fw][lvl][qi] = val;
+  touch();
+}
+function setFlag(fw, lvl, qi, val) {
+  const v = getCurrent(); if (!v) return;
+  v.flag[fw][lvl][qi] = val;
+  touch();
+}
+function setConf(fw, lvl, val) {
+  const v = getCurrent(); if (!v) return;
+  v.conf[fw][lvl] = val;
+  touch(); renderAssessment(); renderPortfolio();
+}
+
+// =========================================================
+// EXPORT
+// =========================================================
+function exportScorecard(showOnly) {
+  const v = getCurrent(); if (!v) return;
+  const prl = fwScore('prl', v), peoml = fwScore('peoml', v), proml = fwScore('proml', v);
+  const date = new Date().toISOString().slice(0,10);
+  const lines = [];
+  lines.push(`# Due Diligence Scorecard: ${v.name}`);
+  lines.push(`*Assessed ${date} · ${v.risks.length} risks logged*`);
+  lines.push('');
+  lines.push('## Summary scores');
+  lines.push('');
+  lines.push('| Dimension | Score | Notes |');
+  lines.push('|-----------|-------|-------|');
+  lines.push(`| Prototype (PRL) | ${prl} / 9 | |`);
+  lines.push(`| People (PeoML) | ${peoml} / 5 | |`);
+  lines.push(`| Process (ProML) | ${proml} / 5 | |`);
+  lines.push('');
+
+  Object.keys(FRAMEWORKS).forEach(fwKey => {
+    const fw = FRAMEWORKS[fwKey];
+    lines.push(`## ${fw.title} (${fw.sub})`);
+    lines.push(`**Achieved through level ${fwScore(fwKey,v)} of ${fw.maxLvl}.**`);
+    lines.push('');
+    fw.levels.forEach(l => {
+      const ach = levelAchieved(fwKey, l.num, v);
+      const conf = v.conf[fwKey][l.num];
+      lines.push(`### ${fw.title.replace(' Readiness','')} ${l.num} — ${l.name}`);
+      lines.push(`${ach?'✓ Achieved':'○ Not achieved'}${conf?` · Confidence: ${conf}`:''}`);
+      lines.push('');
+      l.qs.forEach((q,i) => {
+        const sc = v.q[fwKey][l.num][i];
+        const ev = v.evidence[fwKey][l.num][i];
+        const fg = v.flag[fwKey][l.num][i];
+        const mark = ['✗','◔','◐','✓'][sc];
+        lines.push(`- ${mark} **${SCORE_LABELS[sc]}** — ${q}`);
+        if (ev) lines.push(`    - *Evidence:* ${ev}`);
+        if (fg) lines.push(`    - *Flag:* ${fg}`);
+      });
+      lines.push('');
+    });
+  });
+
+  if (v.risks.length) {
+    lines.push('## Risk plan');
+    lines.push('');
+    lines.push('| Category | Status | Short-term mitigation | Long-term mitigation | Confidence |');
+    lines.push('|----------|--------|----------------------|----------------------|------------|');
+    v.risks.forEach(r => {
+      lines.push(`| ${r.category||'(unspecified)'} | ${r.status||'review'} | ${(r.shortTerm||'').replace(/\|/g,'/').replace(/\n/g,' ')} | ${(r.longTerm||'').replace(/\|/g,'/').replace(/\n/g,' ')} | ${r.confidence||'medium'} |`);
+    });
+    lines.push('');
+  }
+
+  const md = lines.join('\n');
+  const out = document.getElementById('export-output');
+  out.value = md;
+  if (showOnly) {
+    out.style.display = 'block';
+    out.scrollIntoView({behavior:'smooth', block:'nearest'});
+  } else {
+    navigator.clipboard.writeText(md).then(
+      () => toast('Scorecard copied to clipboard'),
+      () => { out.style.display = 'block'; toast('Could not copy. Showing for manual copy.'); }
+    );
+  }
+}
+
+// =========================================================
+// WORKED EXAMPLE LOADER
+// =========================================================
+function loadWriteAheadExample() {
+  const v = blankVenture('WriteAhead (example)');
+  // PRL 1, 2 fully yes; PRL 3 partially scored; rest not
+  ['prl', 'peoml', 'proml'].forEach(fw => {
+    FRAMEWORKS[fw].levels.forEach(l => {
+      l.qs.forEach((q,i) => {
+        v.q[fw][l.num][i] = 0;
+        v.evidence[fw][l.num][i] = '';
+      });
+    });
+  });
+  // Set scores
+  // PRL 1: yes
+  [0,1,2].forEach(i => v.q.prl[1][i] = 3);
+  v.evidence.prl[1][0] = 'Cited Hattie meta-analyses on feedback in writing instruction; cited Cummins 2009 on scaffolding for multilingual learners.';
+  v.conf.prl[1] = 'high';
+  // PRL 2: yes
+  [0,1,2].forEach(i => v.q.prl[2][i] = 3);
+  v.conf.prl[2] = 'high';
+  // PRL 3: partial - components work but feasibility study not done
+  v.q.prl[3][0] = 2; // strong - components work
+  v.q.prl[3][1] = 1; // weak - no formal feasibility study
+  v.q.prl[3][2] = 1; // weak - one classroom only
+  v.evidence.prl[3][1] = 'Tested with 15 students in co-founder classroom; no formal feasibility study; no baseline characterization.';
+  v.flag.prl[3][1] = 'follow-up';
+  v.conf.prl[3] = 'medium';
+  // PeoML 1: yes
+  [0,1,2].forEach(i => v.q.peoml[1][i] = 3);
+  v.evidence.peoml[1][0] = 'Mission states "supporting multilingual learners"; explicit in pitch deck.';
+  v.conf.peoml[1] = 'high';
+  // PeoML 2: no
+  v.flag.peoml[2][0] = 'no community consultation mechanism';
+  v.conf.peoml[2] = 'high';
+  // ProML 1: borderline - stated but not detailed
+  v.q.proml[1][0] = 2;
+  v.q.proml[1][1] = 1;
+  v.q.proml[1][2] = 1;
+  v.evidence.proml[1][1] = 'Equity goals named but no measurable subgroup outcomes specified.';
+  v.conf.proml[1] = 'medium';
+
+  // Risks
+  v.risks = [
+    { id:'r1', category:'School access / district recruitment', status:'review', shortTerm:'Co-founder classroom available; no other commitments', longTerm:'Plan to reach 5 partner classrooms by month 9', confidence:'low' },
+    { id:'r2', category:'Equity-execution risk', status:'review', shortTerm:'Mission statement; one ELA-teacher co-founder', longTerm:'Hire community-advisory cadence; bring multilingual-learner-community member onto team', confidence:'low' },
+    { id:'r3', category:'AI deployment (model drift, bias, privacy)', status:'review', shortTerm:'Using off-the-shelf LLM; no monitoring', longTerm:'Build evaluation protocol for hallucination, bias by language background, model drift', confidence:'low' },
+  ];
+
+  state.ventures[v.id] = v;
+  state.currentId = v.id;
+  saveState();
+  renderAll();
+  switchTab('assess');
+  toast('WriteAhead example loaded');
+}
+
+// =========================================================
+// TABS / MISC
+// =========================================================
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+  const tab = document.querySelector(`.tab[data-tab="${name}"]`);
+  if (tab) tab.classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'assess') setTimeout(renderAssessment, 30);
+  if (name === 'risks') renderRisks();
+  if (name === 'portfolio') renderPortfolio();
+}
+
+function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmt(ts) { if (!ts) return '—'; const d = new Date(ts); return d.toISOString().slice(0,10); }
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2400);
+}
+
+function renderAll() {
+  renderHeader();
+  renderAssessment();
+  renderRisks();
+  renderPortfolio();
+}
+
+renderOverview();
+renderAll();
+
+// =========================================================
+// AI ANALYSIS (hosted version: uses /api/analyze server proxy)
+// =========================================================
+async function callAnalysisAPI(prompt) {
+  const response = await fetch('/api/analyze', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ prompt })
+  });
+  if (!response.ok) {
+    let detail = '';
+    try { const j = await response.json(); detail = j.error || ''; } catch (e) {}
+    throw new Error(`Server returned ${response.status}${detail ? ': ' + detail : ''}`);
+  }
+  const json = await response.json();
+  if (typeof json.text !== 'string') throw new Error('Unexpected response from server');
+  return json.text;
+}
+
+function loadFromFile(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('proposal-text').value = e.target.result;
+    if (!document.getElementById('analyze-venture-name').value) {
+      const baseName = file.name.replace(/\.txt$/i,'').replace(/[_-]/g,' ');
+      document.getElementById('analyze-venture-name').value = baseName;
+    }
+    setAnalyzeStatus('working', `Loaded ${file.name} (${(file.size/1024).toFixed(1)} KB).`);
+  };
+  reader.onerror = () => setAnalyzeStatus('error', 'Could not read file.');
+  reader.readAsText(file);
+}
+
+function setAnalyzeStatus(kind, html) {
+  const el = document.getElementById('analyze-status');
+  el.className = 'analyze-status active ' + kind;
+  el.innerHTML = html;
+}
+
+function clearAnalyzeStatus() {
+  document.getElementById('analyze-status').className = 'analyze-status';
+}
+
+function buildAnalysisPrompt(text) {
+  // Build per-framework question structure for the model
+  const rubric = {};
+  Object.keys(FRAMEWORKS).forEach(fw => {
+    rubric[fw] = {};
+    FRAMEWORKS[fw].levels.forEach(l => {
+      rubric[fw][l.num] = {
+        name: l.name,
+        questions: l.qs,
+      };
+    });
+  });
+
+  return `You are executing the SETA-ED R&D Readiness Analysis on a grant proposal from an education R&D venture. The methodology is defined by SETA-ED (Scientific and Engineering Technical Assistance for Education) and adapted from the R&D portfolio practices of DARPA, ARPA-E, and other Advanced Research Project Agencies. The framework has three dimensions, each with multiple levels:
+
+- Prototype Readiness Levels (PRL): 9 levels of prototype maturity
+- People Readiness Levels (PeoML): 5 levels of team and community readiness
+- Process Readiness Levels (ProML): 5 levels of R&D-cycle equity discipline
+
+Score the proposal HONESTLY. The framework is designed to surface aspirational language vs. operational reality. Most ventures overstate their readiness; the framework's value is in catching that. When the proposal mentions something only briefly or aspirationally, score "weak" not "strong." Reserve "yes" for cases where the proposal cites specific artifacts, named partners, or documented processes.
+
+For each rubric question, return:
+- score: 0 (no evidence in proposal), 1 (weak — mentioned but not at the level the question asks), 2 (strong — clear evidence at the level), 3 (yes — documented evidence with specific citation/artifact)
+- evidence: a brief quote OR paraphrase from the proposal supporting your score (max 200 chars). If no evidence, use empty string.
+
+Return ONLY valid JSON in EXACTLY this structure (no prose before or after, no markdown fencing):
+
+{
+  "summary": "2-3 sentence overall readiness assessment across the three dimensions, highlighting the strongest and weakest dimensions",
+  "prl": {
+    "1": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "2": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "3": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "4": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "5": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "6": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "7": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "8": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "9": { "scores": [N,N,N], "evidence": ["...","...","..."] }
+  },
+  "peoml": {
+    "1": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "2": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "3": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "4": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "5": { "scores": [N,N,N], "evidence": ["...","...","..."] }
+  },
+  "proml": {
+    "1": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "2": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "3": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "4": { "scores": [N,N,N], "evidence": ["...","...","..."] },
+    "5": { "scores": [N,N,N], "evidence": ["...","...","..."] }
+  }
+}
+
+Each "scores" array must have exactly 3 integers (one per question at that level). Each "evidence" array must have exactly 3 strings.
+
+The rubric questions are:
+${JSON.stringify(rubric, null, 2)}
+
+PROPOSAL TEXT TO EVALUATE:
+"""
+${text}
+"""
+
+Return only the JSON object, with no surrounding prose or markdown.`;
+}
+
+function extractJSON(response) {
+  if (typeof response !== 'string') response = String(response);
+  // Try direct parse
+  try { return JSON.parse(response); } catch (e) {}
+  // Try to find JSON object in response (greedy match for outermost braces)
+  const firstBrace = response.indexOf('{');
+  const lastBrace = response.lastIndexOf('}');
+  if (firstBrace === -1 || lastBrace === -1) throw new Error('No JSON object found in response');
+  const candidate = response.slice(firstBrace, lastBrace + 1);
+  try { return JSON.parse(candidate); } catch (e) {
+    throw new Error('Could not parse JSON: ' + e.message);
+  }
+}
+
+function validateAnalysis(analysis) {
+  const errors = [];
+  ['prl','peoml','proml'].forEach(fw => {
+    if (!analysis[fw]) { errors.push(`Missing ${fw}`); return; }
+    FRAMEWORKS[fw].levels.forEach(l => {
+      const r = analysis[fw][l.num] || analysis[fw][String(l.num)];
+      if (!r) { errors.push(`Missing ${fw} level ${l.num}`); return; }
+      if (!Array.isArray(r.scores) || r.scores.length !== 3) errors.push(`${fw} L${l.num}: scores not array of 3`);
+      if (!Array.isArray(r.evidence) || r.evidence.length !== 3) errors.push(`${fw} L${l.num}: evidence not array of 3`);
+    });
+  });
+  return errors;
+}
+
+function buildRiskPrompt(text) {
+  return `You are executing the second pass of the SETA-ED R&D Readiness Analysis on a grant proposal from an education R&D venture. This pass identifies the key risks the funder should consider when supporting this venture, structured according to DARPA's R&D risk-management methodology.
+
+DARPA risk methodology has three steps: (1) identify the categories of risk inherent in the project; (2) determine which categories the funder is willing to accept; (3) for accepted categories, articulate explicit short-term and long-term mitigation strategies.
+
+Identify 4–7 risks based on what is (and what is not) addressed in the proposal. Use the standard categories below where they fit; create new categories only when a risk doesn't map cleanly to one of these:
+
+Standard categories:
+- "Evidence development" — risk that the venture can produce credible evidence of impact in the engagement window
+- "School access / district recruitment" — risk that the venture can secure the school partnerships its evidence work requires
+- "AI deployment (model drift, bias, privacy)" — risk specific to AI-powered solutions
+- "Adoption / district purchase" — risk that districts will actually buy and deploy the product
+- "Team continuity / key-person dependency" — risk that the venture's capacity rests on a single founder or critical role
+- "Equity-execution risk" — risk that inequitable outcomes emerge despite stated equity goals
+- "Methodological dependency" — risk that the R&D plan depends on infrastructure or partners not yet in place
+- "Operational scale" — risk that the venture cannot operate at the scope and pace the proposal commits to
+
+For each risk:
+- category: short label (max 80 chars), preferring standard categories above
+- shortTerm: what the venture is currently doing (or NOT doing) to address the risk, paraphrased from the proposal (max 250 chars). If the proposal is silent, say so explicitly: "Not addressed in proposal."
+- longTerm: what the venture's plan is over the engagement horizon, paraphrased from the proposal (max 250 chars). If the proposal is silent, say "No long-term plan stated."
+- confidence: "low" / "medium" / "high" — your confidence in the strength of the venture's mitigation plan (NOT in the severity of the risk). Lean conservative: "low" if the proposal lacks specifics; "high" only if the proposal cites concrete actions, named partners, or documented processes.
+- status: "review" by default. Mark "rejected" only if the risk is so unaddressed it is genuinely blocking. Do not mark "accepted" — that's a funder decision.
+
+Be conservative. If a proposal does not address a risk that any reasonable evaluator would expect it to address, surface that explicitly with confidence "low."
+
+Return ONLY valid JSON in EXACTLY this structure:
+
+{
+  "risks": [
+    { "category": "...", "shortTerm": "...", "longTerm": "...", "confidence": "low|medium|high", "status": "review|rejected" }
+  ]
+}
+
+PROPOSAL TEXT:
+"""
+${text}
+"""
+
+Return only the JSON object, no surrounding prose.`;
+}
+
+function validateRisks(analysis) {
+  if (!analysis || !Array.isArray(analysis.risks)) return ['No risks array returned'];
+  const errors = [];
+  analysis.risks.forEach((r, i) => {
+    if (!r.category) errors.push(`Risk ${i}: missing category`);
+  });
+  return errors;
+}
+
+async function runAnalysis() {
+  const text = document.getElementById('proposal-text').value.trim();
+  const ventureName = (document.getElementById('analyze-venture-name').value || '').trim() || 'Analyzed venture';
+  const btn = document.getElementById('analyze-btn');
+  const resultsDiv = document.getElementById('analyze-results');
+
+  if (!text) { setAnalyzeStatus('error', 'Paste proposal text or upload a .txt file first.'); return; }
+  if (text.length < 300) { setAnalyzeStatus('error', `Proposal text is only ${text.length} chars — too short for a meaningful analysis. Please paste the full proposal.`); return; }
+  if (text.length > 200000) { setAnalyzeStatus('error', `Proposal text is ${(text.length/1000).toFixed(0)}KB — over the 200K limit. Please trim before submitting.`); return; }
+
+  // Hosted version: use server-side API proxy
+
+  btn.disabled = true;
+  resultsDiv.innerHTML = '';
+
+  let analysis = null;
+  let riskAnalysis = null;
+  let scoringErrors = [];
+  let riskErrors = [];
+  let elapsedTotal = 0;
+
+  try {
+    // ===== PASS 1: Readiness scoring =====
+    setAnalyzeStatus('working', `<span class="spinner"></span><b>Pass 1 of 2 — Readiness scoring.</b> Analyzing ${(text.length/1000).toFixed(1)}KB of proposal text against 57 rubric questions across the 3 readiness frameworks. Typically 20–40 seconds…`);
+    const t0 = Date.now();
+    const scoringPrompt = buildAnalysisPrompt(text);
+    const scoringResponse = await callAnalysisAPI(scoringPrompt);
+    elapsedTotal += (Date.now() - t0);
+
+    analysis = extractJSON(scoringResponse);
+    scoringErrors = validateAnalysis(analysis);
+    if (scoringErrors.length) console.warn('Pass 1 validation:', scoringErrors);
+
+    // ===== PASS 2: Risk inventory =====
+    setAnalyzeStatus('working', `<span class="spinner"></span><b>Pass 2 of 2 — Risk inventory.</b> Mapping the proposal to a DARPA-style risk plan: 4–7 risk categories with short- and long-term mitigations and confidence ratings. Typically 15–30 seconds…`);
+    const t1 = Date.now();
+    try {
+      const riskPrompt = buildRiskPrompt(text);
+      const riskResponse = await callAnalysisAPI(riskPrompt);
+      elapsedTotal += (Date.now() - t1);
+      riskAnalysis = extractJSON(riskResponse);
+      riskErrors = validateRisks(riskAnalysis);
+      if (riskErrors.length) console.warn('Pass 2 validation:', riskErrors);
+    } catch (riskErr) {
+      console.error('Risk pass failed:', riskErr);
+      // Continue with scoring even if risks fail
+      riskErrors.push('Risk pass failed: ' + riskErr.message);
+    }
+
+    // ===== Apply to venture =====
+    const v = blankVenture(ventureName);
+    v.notes = analysis.summary || '';
+    Object.keys(FRAMEWORKS).forEach(fw => {
+      FRAMEWORKS[fw].levels.forEach(l => {
+        const r = analysis[fw] && (analysis[fw][l.num] || analysis[fw][String(l.num)]);
+        if (r) {
+          for (let i = 0; i < 3; i++) {
+            const score = r.scores && r.scores[i];
+            if (typeof score === 'number' && score >= 0 && score <= 3) v.q[fw][l.num][i] = score;
+            const ev = r.evidence && r.evidence[i];
+            if (typeof ev === 'string') v.evidence[fw][l.num][i] = ev;
+          }
+        }
+      });
+    });
+    if (riskAnalysis && Array.isArray(riskAnalysis.risks)) {
+      riskAnalysis.risks.forEach(r => {
+        v.risks.push({
+          id: 'r_' + Date.now().toString(36) + Math.random().toString(36).slice(2,5),
+          category: String(r.category || '').slice(0, 200),
+          shortTerm: String(r.shortTerm || '').slice(0, 500),
+          longTerm: String(r.longTerm || '').slice(0, 500),
+          confidence: ['low','medium','high'].includes(r.confidence) ? r.confidence : 'medium',
+          status: r.status === 'rejected' ? 'rejected' : 'review',
+        });
+      });
+    }
+    state.ventures[v.id] = v;
+    state.currentId = v.id;
+    saveState();
+    renderAll();
+
+    const prl = fwScore('prl', v), peoml = fwScore('peoml', v), proml = fwScore('proml', v);
+    const elapsedSec = (elapsedTotal/1000).toFixed(1);
+    const riskCount = (riskAnalysis && Array.isArray(riskAnalysis.risks)) ? riskAnalysis.risks.length : 0;
+    setAnalyzeStatus('success', `<b>✓ R&D Readiness Analysis complete in ${elapsedSec}s</b> — venture "${escapeHtml(ventureName)}" added to your portfolio. Readiness: PRL ${prl}/9, PeoML ${peoml}/5, ProML ${proml}/5. Risks logged: ${riskCount}.`);
+
+    resultsDiv.innerHTML = `
+      <div class="analyze-summary">
+        <h4>R&D Readiness Analysis — Summary</h4>
+        <div>${escapeHtml(analysis.summary || '(no summary returned)')}</div>
+        <div class="analyze-preview-scoreline">
+          <div class="score-pill"><div class="lab">PRL</div><div class="num">${prl}<span class="of"> / 9</span></div></div>
+          <div class="score-pill peoml"><div class="lab">PeoML</div><div class="num">${peoml}<span class="of"> / 5</span></div></div>
+          <div class="score-pill proml"><div class="lab">ProML</div><div class="num">${proml}<span class="of"> / 5</span></div></div>
+          <div class="score-pill" style="border-left:4px solid var(--orange);"><div class="lab">Risks</div><div class="num">${riskCount}</div></div>
+        </div>
+        <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn" onclick="switchTab('assess')">Review &amp; refine in Assessment →</button>
+          <button class="btn secondary" onclick="switchTab('risks')">Review risks →</button>
+          <button class="btn secondary" onclick="exportScorecard()">Export scorecard</button>
+        </div>
+        ${(scoringErrors.length || riskErrors.length) ? `<div style="margin-top:12px; padding:8px; background:#FEEBEB; border-radius:4px; font-size:12px; color:var(--red);"><b>Note:</b> ${scoringErrors.length} scoring field(s) and ${riskErrors.length} risk field(s) had unexpected formatting. Review the assessment for any blanks.</div>` : ''}
+      </div>`;
+    resultsDiv.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  } catch (e) {
+    console.error('Analysis error:', e);
+    setAnalyzeStatus('error', `Analysis failed: ${escapeHtml(e.message)}. The proposal text is preserved above; you can try again or score manually.`);
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+</body>
+</html>

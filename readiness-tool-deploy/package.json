@@ -1,0 +1,13 @@
+{
+  "name": "setaed-readiness-tools",
+  "version": "1.0.0",
+  "description": "SETA-ED Inclusive R&D Readiness Tools — venture self-assessment + funder due-diligence rubric",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
