@@ -41,6 +41,12 @@ body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvet
 .frame-pill:hover::after { opacity: 1; }
 .frame-link { display: inline-block; margin-top: 14px; color: var(--navy); font-size: 13px; font-weight: 600; text-decoration: none; }
 .frame-link:hover { color: var(--orange); }
+.benefits-lead { font-weight: 600 !important; color: var(--text) !important; margin-top: 22px !important; font-size: 15px !important; }
+.benefits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+@media (max-width: 720px) { .benefits-grid { grid-template-columns: 1fr; } }
+.benefit { background: var(--tint); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+.benefit-title { color: var(--navy); font-weight: 700; font-size: 14px; margin: 0 0 6px; line-height: 1.35; }
+.benefit p { margin: 0 !important; font-size: 13px !important; color: var(--muted); line-height: 1.55; }
 .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
 </style>
 </head>
@@ -50,7 +56,7 @@ body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvet
   <img src="/prism-logo.svg" alt="PRISM" style="display:block; max-width:380px; width:100%; height:auto; margin: 14px 0 6px;">
   <p class="expansion"><b>P</b>ortfolio <b>R</b>eadiness <b>I</b>nsight &amp; <b>S</b>coring <b>M</b>ethodology</p>
   <p class="tagline">See your portfolio's readiness in three dimensions.</p>
-  <p class="lead">PRISM is SETA-ED's portfolio management platform for evaluating education R&amp;D ventures across three readiness dimensions: <b>Prototype</b>, <b>People</b>, and <b>Process</b>. Defined by SETA-ED and adapted from the R&amp;D portfolio practices of DARPA, ARPA-E, IARPA, ARPA-H, and other Advanced Research Project Agencies. Two purpose-built interfaces share the same rubric — collapsing information asymmetry between funders and ventures.</p>
+  <p class="lead">PRISM is SETA-ED's portfolio management platform for benchmarking and tracking education R&amp;D ventures across three independent readiness dimensions — <b>Prototype</b>, <b>People</b>, and <b>Process</b>. A structured, three-dimensional rubric gives funders and ventures shared language, turns progress into observable milestones, surfaces honest progress even when prototype work stalls, and catches what one-dimensional frameworks miss. Defined by SETA-ED and adapted from DARPA / ARPA-E / IARPA / ARPA-H portfolio practice. Two purpose-built interfaces share the same rubric.</p>
 
   <div class="grid">
     <div class="card">
@@ -71,14 +77,32 @@ body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvet
   </div>
 
   <div class="section">
-    <h3>The three readiness dimensions</h3>
-    <p>Every project has three readiness scores at any moment, one per dimension:</p>
+    <h3>Why three dimensions</h3>
+    <p>Every PRISM project has three readiness scores at any moment, one per dimension:</p>
     <div class="frame-pills">
       <a class="frame-pill" href="/prl.html">Prototype Readiness Levels (PRL) · 9 levels</a>
       <a class="frame-pill" href="/peoml.html">People Readiness Levels (PeoML) · 5 levels</a>
       <a class="frame-pill" href="/proml.html">Process Readiness Levels (ProML) · 5 levels</a>
     </div>
-    <p style="margin-top: 14px;">A prototype can reach PRL 9 — sustained, scaled use across thousands of classrooms — and still be inequitable in ways no amount of additional prototype work can fix. The People and Process ladders catch what PRL alone cannot.</p>
+    <p class="benefits-lead">Three independent, structured ladders do work narrative review can't:</p>
+    <div class="benefits-grid">
+      <div class="benefit">
+        <div class="benefit-title">Shared language → payable milestones</div>
+        <p>Funders and ventures score on the same ladder. Grant tranches release against named transitions (PRL 5 → 6, ProML 3 → 4) instead of vague deliverables.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-title">Shared expectations with funders</div>
+        <p>Each stage specifies what reasonable progress looks like — surfacing honest progress even when prototype work stalls and only People or Process advances.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-title">Apples-to-apples across the portfolio</div>
+        <p>Same rubric across all grantees: comparable scoring, distributions, outliers, longitudinal trend lines. Collapses inter-reviewer drift.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-title">Catches what 1D frameworks miss</div>
+        <p>A prototype can hit PRL 9 — scaled across thousands of classrooms — and still be inequitable. The People and Process ladders surface theory-of-change gaps and equity exposure that PRL alone cannot.</p>
+      </div>
+    </div>
     <a class="frame-link" href="/frameworks.html">Compare all three readiness dimensions →</a>
   </div>
 
