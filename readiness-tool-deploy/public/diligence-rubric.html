@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Inclusive R&D Due Diligence Rubric — SETA-ED</title>
+<title>PRISM Due-Diligence — SETA-ED</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root { color-scheme: light;
@@ -200,7 +200,7 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 <div class="wrap">
 
 <header>
-  <div class="brand">SETA-ED · Due Diligence Rubric<div class="small" style="font-weight:500;">Inclusive R&D readiness assessment for funder review teams</div></div>
+  <div class="brand">SETA-ED · PRISM Due-Diligence<div class="small" style="font-weight:500;">Portfolio Readiness Insight &amp; Scoring Methodology — for funder review teams</div></div>
   <div class="venture-bar">
     <select id="venture-select"></select>
     <input id="venture-name" placeholder="Venture name" />
@@ -212,11 +212,11 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 
 <div class="howto">
   <div class="howto-label">For program officers</div>
-  <div class="howto-text">For each applicant, paste their grant proposal into the <b>R&D Readiness Analysis</b> tab to get a draft scorecard across Prototype, People, and Process readiness plus a populated DARPA-style risk plan. Refine the scores and evidence notes in the <b>Assessment</b> and <b>Risk Plan</b> tabs, compare ventures in <b>Portfolio</b>, and export any scorecard as Markdown for your review team.</div>
+  <div class="howto-text">For each applicant, paste their grant proposal into the <b>PRISM Analysis</b> tab to get a draft scorecard across Prototype, People, and Process readiness plus a populated DARPA-style risk plan. Refine the scores and evidence notes in the <b>Assessment</b> and <b>Risk Plan</b> tabs, compare ventures in <b>Portfolio</b>, and export any scorecard as Markdown for your review team.</div>
 </div>
 
 <div class="tabs">
-  <button class="tab active" data-tab="analyze">R&D Readiness Analysis</button>
+  <button class="tab active" data-tab="analyze">PRISM Analysis</button>
   <button class="tab" data-tab="assess">Assessment</button>
   <button class="tab" data-tab="risks">Risk Plan</button>
   <button class="tab" data-tab="portfolio">Portfolio</button>
@@ -227,8 +227,9 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 <!-- ANALYZE PROPOSAL -->
 <div class="panel active" id="panel-analyze">
   <div class="analyze-card">
-    <h2>R&D Readiness Analysis</h2>
-    <p class="lead">An evidence-based readiness assessment defined by SETA-ED and adapted from the R&D portfolio practices of DARPA, ARPA-E, and other Advanced Research Project Agencies. Paste a grant proposal (or upload a .txt file) to receive a complete draft assessment against the three Inclusive R&D readiness frameworks — Prototype, People, and Process — with evidence quotes for every rubric question and an automated risk inventory based on the proposal.</p>
+    <h2>PRISM <span style="color:var(--orange); font-weight:500; font-size:14px;">— Portfolio Readiness Insight &amp; Scoring Methodology</span></h2>
+    <p style="color:var(--orange); font-style:italic; font-weight:600; margin: 0 0 10px;">See your portfolio's readiness in three dimensions.</p>
+    <p class="lead">PRISM is SETA-ED's portfolio management platform for evaluating ventures across three readiness dimensions: <b>Prototype</b>, <b>People</b>, and <b>Process</b>. Defined by SETA-ED and adapted from the R&D portfolio practices of DARPA, ARPA-E, and other Advanced Research Project Agencies. Paste a grant proposal (or upload a .txt file) to receive a complete draft assessment against all three readiness frameworks — with evidence quotes for every rubric question and an automated risk inventory based on the proposal.</p>
 
     <div class="step"><b>Step 1.</b> Paste the proposal text below. For .docx or .pdf files, open in Word/Preview, select all (⌘/Ctrl+A), and copy-paste here. For .txt files, use the upload button.</div>
 
@@ -244,21 +245,21 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 
     <div class="analyze-controls">
       <input id="analyze-venture-name" placeholder="Venture name (e.g., 'WriteAhead Inc.')" />
-      <button class="btn ai-btn" id="analyze-btn" onclick="runAnalysis()">▶ Run R&D Readiness Analysis</button>
+      <button class="btn ai-btn" id="analyze-btn" onclick="runAnalysis()">▶ Run PRISM Analysis</button>
     </div>
 
     <div class="analyze-status" id="analyze-status"></div>
     <div id="analyze-results"></div>
 
     <div class="analyze-help">
-      <b>What the R&D Readiness Analysis returns:</b>
+      <b>What the PRISM Analysis returns:</b>
       <ul>
         <li><b>Pass 1 — Readiness scoring.</b> A score (No / Weak / Strong / Yes) for every PRL, PeoML, and ProML question, with a short evidence quote or paraphrase from the proposal supporting each score, and an overall summary of readiness across the three dimensions.</li>
         <li><b>Pass 2 — Risk inventory.</b> A populated DARPA-style risk plan: 4–7 risk categories surfaced from the proposal, each with the venture's stated short-term mitigation, their long-term mitigation plan, and a reviewer-facing confidence rating in the strength of that mitigation.</li>
         <li>The whole assessment applied to a new venture in your portfolio — ready for you to review and refine.</li>
       </ul>
       <div style="margin-top:10px;"><b>Conservative scoring.</b> The analysis is calibrated to score honestly — most ventures overstate their readiness, and the framework's value is in catching that. When the proposal mentions something only briefly or aspirationally, expect "Weak" rather than "Strong." Always re-read the evidence quotes and adjust scores where your judgment differs.</div>
-      <div style="margin-top:10px;"><b>Methodology.</b> The R&D Readiness Analysis is run by a language model executing the SETA-ED rubric. Proposal text is processed in real time and not retained beyond the venture's local record in this browser. The methodology — not the model — is the source of authority: the rubric, scoring anchors, and risk taxonomy were defined by Dr. Melina Uncapher (SETA-ED) drawing on AERDF and ARPA risk-management practice.</div>
+      <div style="margin-top:10px;"><b>Methodology.</b> The PRISM Analysis is run by a language model executing the SETA-ED rubric. Proposal text is processed in real time and not retained beyond the venture's local record in this browser. The methodology — not the model — is the source of authority: the rubric, scoring anchors, and risk taxonomy were defined by Dr. Melina Uncapher (SETA-ED) drawing on AERDF and ARPA risk-management practice.</div>
     </div>
   </div>
 </div>
@@ -1132,7 +1133,7 @@ function buildAnalysisPrompt(text) {
     });
   });
 
-  return `You are executing the SETA-ED R&D Readiness Analysis on a grant proposal from an education R&D venture. The methodology is defined by SETA-ED (Scientific and Engineering Technical Assistance for Education) and adapted from the R&D portfolio practices of DARPA, ARPA-E, and other Advanced Research Project Agencies. The framework has three dimensions, each with multiple levels:
+  return `You are executing the SETA-ED PRISM Analysis on a grant proposal from an education R&D venture. The methodology is defined by SETA-ED (Scientific and Engineering Technical Assistance for Education) and adapted from the R&D portfolio practices of DARPA, ARPA-E, and other Advanced Research Project Agencies. The framework has three dimensions, each with multiple levels:
 
 - Prototype Readiness Levels (PRL): 9 levels of prototype maturity
 - People Readiness Levels (PeoML): 5 levels of team and community readiness
@@ -1217,7 +1218,7 @@ function validateAnalysis(analysis) {
 }
 
 function buildRiskPrompt(text) {
-  return `You are executing the second pass of the SETA-ED R&D Readiness Analysis on a grant proposal from an education R&D venture. This pass identifies the key risks the funder should consider when supporting this venture, structured according to DARPA's R&D risk-management methodology.
+  return `You are executing the second pass of the SETA-ED PRISM Analysis on a grant proposal from an education R&D venture. This pass identifies the key risks the funder should consider when supporting this venture, structured according to DARPA's R&D risk-management methodology.
 
 DARPA risk methodology has three steps: (1) identify the categories of risk inherent in the project; (2) determine which categories the funder is willing to accept; (3) for accepted categories, articulate explicit short-term and long-term mitigation strategies.
 
@@ -1352,11 +1353,11 @@ async function runAnalysis() {
     const prl = fwScore('prl', v), peoml = fwScore('peoml', v), proml = fwScore('proml', v);
     const elapsedSec = (elapsedTotal/1000).toFixed(1);
     const riskCount = (riskAnalysis && Array.isArray(riskAnalysis.risks)) ? riskAnalysis.risks.length : 0;
-    setAnalyzeStatus('success', `<b>✓ R&D Readiness Analysis complete in ${elapsedSec}s</b> — venture "${escapeHtml(ventureName)}" added to your portfolio. Readiness: PRL ${prl}/9, PeoML ${peoml}/5, ProML ${proml}/5. Risks logged: ${riskCount}.`);
+    setAnalyzeStatus('success', `<b>✓ PRISM Analysis complete in ${elapsedSec}s</b> — venture "${escapeHtml(ventureName)}" added to your portfolio. Readiness: PRL ${prl}/9, PeoML ${peoml}/5, ProML ${proml}/5. Risks logged: ${riskCount}.`);
 
     resultsDiv.innerHTML = `
       <div class="analyze-summary">
-        <h4>R&D Readiness Analysis — Summary</h4>
+        <h4>PRISM Analysis — Summary</h4>
         <div>${escapeHtml(analysis.summary || '(no summary returned)')}</div>
         <div class="analyze-preview-scoreline">
           <div class="score-pill"><div class="lab">PRL</div><div class="num">${prl}<span class="of"> / 9</span></div></div>
