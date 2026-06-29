@@ -1,0 +1,49 @@
+# GitHub Actions workflow — Supabase keepalive
+#
+# Purpose: Prevent the free-tier Supabase project from auto-pausing after
+#   7 days of inactivity by pinging it twice a week.
+#
+# To check runs: Repo → "Actions" tab → "Supabase keepalive".
+# To run manually: same place → "Run workflow" button.
+# To disable: same place → "..." menu → "Disable workflow".
+#
+# The anon key below is the same publishable key in public/config.js — safe to commit.
+
+name: Supabase keepalive
+
+on:
+  schedule:
+    # Twice weekly: Sundays and Wednesdays at 12:00 UTC.
+    # Max gap between runs is 4 days, well under the 7-day pause threshold.
+    - cron: '0 12 * * 0,3'
+  workflow_dispatch:
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Ping Supabase REST API to reset inactivity timer
+        run: |
+          ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkbm93c254eGJ4cmV6ZmRsbWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MzQ3MDMsImV4cCI6MjA5NTQxMDcwM30.OQdBhFGFuFSDSL_nchGxOuHptHu6m33v-vP3WIwVi9E"
+          PROJECT_URL="https://adnowsnxxbxrezfdlmce.supabase.co"
+
+          echo "Pinging $PROJECT_URL/rest/v1/ventures?select=id&limit=1"
+          status=$(curl -s -o /tmp/response.txt -w "%{http_code}" \
+            -H "apikey: $ANON_KEY" \
+            -H "Authorization: Bearer $ANON_KEY" \
+            "$PROJECT_URL/rest/v1/ventures?select=id&limit=1")
+
+          echo "HTTP status: $status"
+          echo "Response body:"
+          cat /tmp/response.txt
+          echo ""
+
+          if [ "$status" != "200" ]; then
+            echo "::error::Supabase keepalive ping failed with HTTP $status"
+            echo "::error::If the project has already paused, manually resume it at:"
+            echo "::error::https://supabase.com/dashboard/project/adnowsnxxbxrezfdlmce"
+            exit 1
+          fi
+
+          echo "Supabase reached successfully — inactivity timer reset."
