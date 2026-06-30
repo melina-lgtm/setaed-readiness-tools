@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
+<title>Privacy &amp; Security — PRISM (SETA-ED)</title>
+<style>
+:root { color-scheme: light;
+  --navy: #1F3A5F; --navy-dark: #142747; --orange: #E8861C;
+  --green: #2E7D5C; --red: #B83A3A; --blue: #4A78B5;
+  --bg: #F5F7FA; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B7280;
+  --border: #E5E7EB; --tint: #EEF3F8;
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.6; }
+.wrap { max-width:780px; margin:0 auto; padding:24px 22px 80px; }
+
+header.top { display:flex; gap:16px; align-items:center; padding:8px 0 22px; border-bottom:1px solid var(--border); margin-bottom:32px; }
+header.top img { width:32px; height:32px; }
+header.top .brand { color:var(--navy); font-weight:700; letter-spacing:.06em; text-transform:uppercase; font-size:13px; }
+header.top .brand .small { color:var(--muted); font-weight:500; text-transform:none; letter-spacing:0; font-size:12px; }
+header.top .nav { margin-left:auto; font-size:13px; }
+header.top .nav a { color:var(--navy); text-decoration:none; font-weight:600; }
+header.top .nav a:hover { text-decoration:underline; }
+
+h1 { color:var(--navy); margin:0 0 6px; font-size:28px; line-height:1.25; }
+.meta { color:var(--muted); font-size:13px; margin:0 0 32px; }
+.meta a { color:var(--navy); }
+
+h2 { color:var(--navy); margin:36px 0 12px; font-size:18px; line-height:1.3; }
+h3 { color:var(--navy); margin:24px 0 8px; font-size:15px; font-weight:600; }
+p { margin:0 0 14px; font-size:15px; }
+
+.callout { background:var(--tint); border:1px solid #C9D6E6; border-left:4px solid var(--navy);
+  border-radius:6px; padding:14px 16px; margin:16px 0 22px; font-size:14.5px; }
+.callout p:last-child { margin-bottom:0; }
+
+ul { margin:0 0 16px; padding-left:22px; }
+ul li { margin-bottom:6px; font-size:15px; }
+
+a { color:var(--navy); }
+a:hover { text-decoration:underline; }
+
+.muted { color:var(--muted); }
+.small { font-size:13px; color:var(--muted); }
+
+footer { margin-top:48px; padding-top:20px; border-top:1px solid var(--border); font-size:13px; color:var(--muted); }
+footer a { color:var(--navy); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <img src="/prism-logo.svg" alt="">
+  <div class="brand">SETA-ED <span class="small">· PRISM</span></div>
+  <div class="nav">
+    <a href="/diligence-rubric.html">← Back to PRISM</a>
+  </div>
+</header>
+
+<h1>Privacy &amp; Security</h1>
+<p class="meta">
+  Last updated: May 26, 2026 &middot;
+  Questions? <a href="mailto:privacy@seta-ed.com">privacy@seta-ed.com</a>
+</p>
+
+<div class="callout">
+  <p><strong>The short version.</strong> PRISM is a portfolio assessment tool built by SETA-ED. If you use PRISM without signing in, your data stays in your browser and we never see it. If you create an account, your data is stored privately in a Supabase database in the United States, encrypted at rest, readable only by you. The only time data leaves that database is when you run an AI analysis on a proposal — in which case the proposal text is sent to Anthropic to be processed, and is not retained after the response.</p>
+</div>
+
+<h2>What we store</h2>
+
+<h3>If you use PRISM without signing in</h3>
+<ul>
+  <li>We store nothing on our servers about you or your assessments.</li>
+  <li>All your data lives in your browser's <code>localStorage</code>. Clearing your browser data deletes it.</li>
+  <li>The only network call PRISM makes on your behalf is to our AI analysis endpoint, when you choose to run one (see <em>AI analysis</em> below).</li>
+</ul>
+
+<h3>If you sign in with an account</h3>
+<ul>
+  <li>Your email address (used as your sign-in identity).</li>
+  <li>A display name (defaulted to the part of your email before the @).</li>
+  <li>An optional organization name and role, if you fill them in.</li>
+  <li>Each venture you create: its name, your scores, evidence notes, flags, and risk plan items.</li>
+  <li>Timestamps of when ventures were created and last updated.</li>
+  <li>An audit record of AI analysis calls — used to investigate problems if you ever report one. (Sign-in and save audit logging is on our short list of follow-ups.)</li>
+</ul>
+
+<p>We do <strong>not</strong> store:</p>
+<ul>
+  <li>Passwords (PRISM uses magic-link sign-in — there is no password to store).</li>
+  <li>Your IP address in raw form. We store a one-way hash of it for abuse prevention.</li>
+  <li>Anything we don't list above.</li>
+</ul>
+
+<h2>Where the data lives, and who can see it</h2>
+
+<ul>
+  <li><strong>Database:</strong> Supabase Postgres, hosted in the United States.</li>
+  <li><strong>Encryption:</strong> at rest (managed by Supabase) and in transit (HTTPS only).</li>
+  <li><strong>Access control:</strong> Postgres row-level security policies enforce that only your account can read your ventures. This isn't a promise we make in code our application can choose to ignore — it's enforced by the database itself.</li>
+</ul>
+
+<p>The humans who can read your data:</p>
+<ul>
+  <li><strong>You.</strong> Through the PRISM interface or by exporting your data.</li>
+  <li><strong>Dr. Melina Uncapher, founder of SETA-ED.</strong> Has administrative access to the database. Will only read your data with your permission, typically to help diagnose a problem you've reported. Logged in our audit table when it happens.</li>
+  <li><strong>Supabase operations staff</strong> in the event of a database security incident. This is a vendor reality of any hosted database. Supabase's own privacy documentation is at <a href="https://supabase.com/privacy">supabase.com/privacy</a>.</li>
+</ul>
+
+<p>We do not share your data with third parties for marketing, analytics, or research. We do not have a sales team, advertisers, or partners with data access.</p>
+
+<h2>AI analysis: how it works</h2>
+
+<p>When you click "Run PRISM Analysis," the proposal text you've pasted is sent to Anthropic's API. Anthropic processes the text, returns scoring suggestions, and — per Anthropic's commercial terms — does not use that text to train models and does not retain it after the response.</p>
+
+<p>A few specifics:</p>
+<ul>
+  <li>The model we use is Claude (currently Haiku 4.5).</li>
+  <li>We send only the proposal text and the rubric structure. We do not send your account email or any identifying information about who is running the analysis.</li>
+  <li>We do not store the proposal text on our servers unless you save the venture afterward. If you save it, it joins the rest of your venture data per the section above.</li>
+  <li>If you don't have an account, the analysis still works — and there is no record of the call tied to you.</li>
+</ul>
+
+<p>If you'd prefer not to send proposal text to an external LLM at all, you can score the rubric manually inside PRISM — the AI analysis feature is optional. We're considering an explicit "manual only" toggle; let us know if that matters to you.</p>
+
+<h2>Cookies and browser storage</h2>
+<ul>
+  <li>We use one authentication cookie (set by Supabase) to keep you signed in across page loads. It is removed when you sign out.</li>
+  <li>We use <code>localStorage</code> to remember your foundation branding preferences (name and logo) for branded report exports, and — if you use PRISM without signing in — to store your ventures.</li>
+  <li>We do not use analytics cookies, tracking pixels, advertising cookies, or third-party trackers of any kind.</li>
+</ul>
+
+<h2>Deletion</h2>
+<ul>
+  <li>You can delete any venture from the PRISM interface at any time. Deletes are immediate in our active database.</li>
+  <li>To delete your account and all associated data, email <a href="mailto:privacy@seta-ed.com">privacy@seta-ed.com</a>. We commit to deleting from the active database within 7 days of your request, and from encrypted backups within 30 days (the backup retention window).</li>
+  <li>Audit log entries about you may be retained for up to 90 days after account deletion for security incident investigation. They contain no venture content — only action types and timestamps.</li>
+</ul>
+
+<h2>Data export</h2>
+<p>You can export any venture's full content from the PRISM interface as Markdown or a branded PDF. We're adding a one-click "export everything" option in a future update. If you need a full export today, email us.</p>
+
+<h2>Changes to this page</h2>
+<p>When we change what's on this page, we'll update the "Last updated" date at the top, and — for material changes — we'll email signed-in users at least 14 days before the change takes effect. We will not retroactively change how previously-stored data is used.</p>
+
+<h2>Things we don't have (yet) — and what we're doing about them</h2>
+<p>We believe in saying what's true now, including the gaps:</p>
+<ul>
+  <li><strong>SOC 2 Type II.</strong> We don't have it. SOC 2 is on our roadmap when PRISM is being used by organizations whose internal policies require it; in the meantime, this page is our equivalent of a security statement. We're happy to answer specific questions from your team.</li>
+  <li><strong>EU data residency.</strong> PRISM data currently lives in the United States. If your organization needs EU residency, please get in touch — Supabase supports an EU region and we can stand up an EU instance.</li>
+  <li><strong>Single sign-on (SAML/SSO).</strong> Not yet supported. If your foundation requires SSO, get in touch.</li>
+</ul>
+
+<h2>How to contact us</h2>
+<ul>
+  <li>Privacy and security questions: <a href="mailto:privacy@seta-ed.com">privacy@seta-ed.com</a></li>
+  <li>Anything else: <a href="mailto:hello@seta-ed.com">hello@seta-ed.com</a></li>
+</ul>
+
+<footer>
+  &copy; 2026 SETA-ED &middot;
+  <a href="/diligence-rubric.html">PRISM Due-Diligence</a> &middot;
+  <a href="/self-assessment.html">PRISM Self-Assessment</a> &middot;
+  <a href="/index.html">Home</a>
+</footer>
+
+</div>
+</body>
+</html>

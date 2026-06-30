@@ -5,6 +5,9 @@
 <link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
 <title>PRISM Portfolio Analysis — SETA-ED</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<script src="/auth.js"></script>
 <style>
 :root { color-scheme: light;
   --navy: #1F3A5F; --navy-dark: #142747; --orange: #E8861C;
@@ -149,6 +152,25 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 .export-bar .info { color:var(--muted); font-size:12px; flex:1; }
 #export-output { display:none; width:100%; min-height:240px; padding:10px; font-family:ui-monospace,Menlo,monospace; font-size:12px; border:1px solid var(--border); border-radius:6px; margin-top:10px; }
 
+/* BRANDED REPORT (Patch 1) */
+.branding-controls { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); width:100%; }
+.branding-controls label { font-size:12px; color:var(--muted); display:flex; align-items:center; gap:6px; }
+.branding-controls input[type="text"] { font-size:13px; padding:6px 10px; border:1px solid var(--border); border-radius:6px; background:var(--card); color:var(--text); min-width:220px; }
+.branding-controls input[type="file"] { font-size:12px; }
+.branding-controls .branding-status { font-size:11px; color:var(--muted); font-style:italic; }
+.branding-controls .btn-clear-branding { background:none; border:none; color:var(--muted); font-size:11px; text-decoration:underline; cursor:pointer; padding:0; }
+
+/* SETA-ED CTA (Patch 2) */
+.seta-cta { margin-top:18px; padding:16px 20px; background:linear-gradient(135deg,#EFF4F9 0%,#f7fafd 100%); border-left:4px solid #1F4E79; border-radius:8px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+.seta-cta .seta-cta-text { flex:1; min-width:280px; font-size:13px; color:#404040; line-height:1.55; }
+.seta-cta .seta-cta-text h4 { margin:0 0 4px; font-size:14px; color:#1F4E79; font-weight:bold; }
+.seta-cta .seta-cta-text p { margin:0; }
+.seta-cta .seta-cta-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.seta-cta .seta-cta-actions a { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; background:#1F4E79; color:white; text-decoration:none; border-radius:6px; font-size:13px; font-weight:600; transition:background 0.2s; }
+.seta-cta .seta-cta-actions a:hover { background:#163a5c; }
+.seta-cta .seta-cta-actions a.secondary { background:white; color:#1F4E79; border:1px solid #c8d8e8; }
+.seta-cta .seta-cta-actions a.secondary:hover { background:#EFF4F9; }
+
 /* OVERVIEW */
 .overview-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
 @media (max-width:1100px){ .overview-grid { grid-template-columns:1fr; } }
@@ -195,6 +217,33 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 .analyze-help b { color:var(--navy); }
 .analyze-help ul { margin:6px 0 0; padding-left:20px; }
 .analyze-help li { margin-bottom:4px; }
+
+/* AUTH WIDGET */
+#auth-widget { display:flex; align-items:center; gap:6px; margin-left:8px; padding-left:10px; border-left:1px solid var(--border); font-size:13px; }
+#auth-widget .auth-email { color:var(--muted); font-size:12px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ANONYMOUS BANNER */
+#anon-banner { display:flex; gap:14px; align-items:flex-start; background:linear-gradient(180deg, #EEF3F8 0%, #F5F7FA 100%); border:1px solid #C9D6E6; border-left:4px solid var(--blue); border-radius:8px; padding:10px 14px; margin:8px 0 0; font-size:13px; }
+#anon-banner .anon-label { color:var(--blue); font-weight:700; font-size:11px; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; padding-top:2px; min-width:110px; }
+#anon-banner .anon-text { color:var(--text); line-height:1.5; }
+#anon-banner .anon-text a { color:var(--navy); font-weight:600; }
+#anon-banner .anon-text a:hover { text-decoration:underline; }
+@media (max-width:680px){ #anon-banner { flex-direction:column; gap:4px; } #anon-banner .anon-label { min-width:0; } }
+
+/* IMPORT MODAL */
+.modal-backdrop { display:none; position:fixed; inset:0; background:rgba(20,39,71,.55); z-index:9999; align-items:center; justify-content:center; padding:24px; }
+.modal-backdrop.active { display:flex; }
+.modal-card { background:var(--card); border-radius:10px; padding:28px; max-width:480px; width:100%; box-shadow:0 20px 50px rgba(0,0,0,.25); }
+.modal-card h3 { color:var(--navy); margin:0 0 8px; font-size:18px; }
+.modal-card .modal-lede { color:var(--muted); margin:0 0 14px; font-size:14px; line-height:1.55; }
+.modal-card ul.import-list { margin:0 0 18px; padding:10px 14px 10px 30px; background:var(--bg); border-radius:6px; max-height:200px; overflow-y:auto; font-size:13px; }
+.modal-card ul.import-list li { margin-bottom:4px; }
+.modal-card ul.import-list .muted { color:var(--muted); font-size:11px; margin-left:4px; }
+.modal-card .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+.modal-card .modal-actions .btn { padding:8px 14px; font-size:13px; }
+.modal-card .import-status { margin-top:10px; font-size:12px; min-height:16px; color:var(--muted); }
+.modal-card .import-status.err { color:var(--red); }
+.modal-card .import-status.ok  { color:var(--green); }
 </style>
 </head>
 <body>
@@ -208,12 +257,18 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
     <button class="btn small" onclick="addVenture()">+ Add venture</button>
     <button class="btn secondary small" onclick="duplicateVenture()">Duplicate</button>
     <button class="btn danger small" onclick="deleteCurrentVenture()">Delete</button>
+    <div id="auth-widget"><!-- populated by renderAuthWidget() --></div>
   </div>
 </header>
 
 <div class="howto">
   <div class="howto-label">For program officers</div>
   <div class="howto-text">For each applicant, paste their grant proposal into the <b>PRISM Analysis</b> tab to get a draft scorecard across Prototype, People, and Process readiness plus a populated DARPA-style risk plan. Refine the scores and evidence notes in the <b>Assessment</b> and <b>Risk Plan</b> tabs, compare ventures in <b>Portfolio</b>, and export any scorecard as Markdown for your review team.</div>
+</div>
+
+<div id="anon-banner" style="display:none;">
+  <div class="anon-label">No account</div>
+  <div class="anon-text">You're working anonymously — your data stays in this browser and we never see it. <a href="/signin.html">Sign in</a> to save your work privately and access it from any device. <a href="/privacy.html">Privacy notes</a>.</div>
 </div>
 
 <div class="tabs">
@@ -294,11 +349,32 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
       </div>
     </div>
     <div class="export-bar">
-      <div class="info">Export this venture's scorecard as Markdown for sharing with the review team.</div>
-      <button class="btn" onclick="exportScorecard(true)">Show export</button>
-      <button class="btn secondary" onclick="exportScorecard()">Copy to clipboard</button>
+      <div class="info">Export this venture's scorecard for sharing with the review team. Use the branded report for foundation-ready PDF output; use Markdown for drop-in to internal review templates.</div>
+      <button class="btn" onclick="openBrandedReport()">Open branded report (PDF)</button>
+      <button class="btn secondary" onclick="exportScorecard(true)">Show Markdown</button>
+      <button class="btn secondary" onclick="exportScorecard()">Copy Markdown</button>
+      <div class="branding-controls">
+        <label>Foundation name
+          <input type="text" id="branding-name" placeholder="e.g., Digital Promise" oninput="saveBrandingPrefs()" />
+        </label>
+        <label>Logo
+          <input type="file" id="branding-logo" accept="image/*" onchange="handleLogoUpload(event)" />
+        </label>
+        <span class="branding-status" id="branding-status">No branding set — using SETA-ED defaults.</span>
+        <button class="btn-clear-branding" onclick="clearBrandingPrefs()">Clear branding</button>
+      </div>
     </div>
     <textarea id="export-output" readonly></textarea>
+    <div class="seta-cta">
+      <div class="seta-cta-text">
+        <h4>Want help running this across your whole portfolio?</h4>
+        <p>SETA-ED offers methodologist-led deployments — scoring the full portfolio with your team, producing the board-ready and funder-coalition-ready reporting your existing process doesn't generate. Three engagement tiers; the platform itself is included at every tier.</p>
+      </div>
+      <div class="seta-cta-actions">
+        <a href="mailto:melina@seta-ed.com?subject=PRISM%20%E2%80%94%20portfolio%20engagement%20inquiry">Email SETA-ED</a>
+        <a href="https://seta-ed.com" class="secondary" target="_blank" rel="noopener">Learn more</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -535,17 +611,256 @@ const STANDARD_RISKS = [
 // STATE
 // =========================================================
 let state = loadState();
-function loadState() {
+let currentUser = null;        // set by bootAuth() when signed in
+let stateSource = 'local';     // 'local' or 'supabase'
+
+function loadState() { return loadStateLocal(); }
+function loadStateLocal() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch (e) {}
   return { ventures: {}, currentId: null };
 }
-function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){} }
+function saveStateLocal() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){} }
 
+// Dual-mode save. When signed in, debounce-syncs to Supabase. Otherwise writes localStorage.
+// Keep this synchronous-feeling so existing callers (touch, addVenture, etc.) don't need to await.
+function saveState() {
+  if (stateSource === 'supabase' && currentUser) {
+    window.PRISM_SYNC.scheduleSync();
+  } else {
+    saveStateLocal();
+  }
+}
+
+// =========================================================
+// SUPABASE SYNC LAYER
+// =========================================================
+window.PRISM_SYNC = (function() {
+  let timer = null;
+  let inFlight = false;
+  const pendingDeletes = new Set();
+
+  function scheduleSync() {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(runSync, 400);
+  }
+
+  async function runSync() {
+    timer = null;
+    if (inFlight) { scheduleSync(); return; }
+    if (!currentUser || !window.PRISM_AUTH) return;
+    inFlight = true;
+    try {
+      // Process deletes first
+      if (pendingDeletes.size > 0) {
+        const ids = Array.from(pendingDeletes);
+        pendingDeletes.clear();
+        const { error } = await window.PRISM_AUTH.client.from('ventures').delete().in('id', ids);
+        if (error) console.error('[PRISM_SYNC] delete error', error);
+      }
+      // Upsert all current ventures
+      const rows = Object.values(state.ventures).map(v => ({
+        id: v.id,
+        owner_id: currentUser.id,
+        name: v.name,
+        data: v
+      }));
+      if (rows.length > 0) {
+        const { error } = await window.PRISM_AUTH.client.from('ventures').upsert(rows, { onConflict: 'id' });
+        if (error) console.error('[PRISM_SYNC] upsert error', error);
+      }
+    } catch (err) {
+      console.error('[PRISM_SYNC] unexpected error', err);
+    } finally {
+      inFlight = false;
+    }
+  }
+
+  async function loadFromRemote() {
+    if (!currentUser || !window.PRISM_AUTH) return null;
+    const { data, error } = await window.PRISM_AUTH.client
+      .from('ventures')
+      .select('id, name, data, updated_at')
+      .order('updated_at', { ascending: false });
+    if (error) { console.error('[PRISM_SYNC] load error', error); return null; }
+    return data || [];
+  }
+
+  function applyRemoteRows(rows) {
+    const newState = { ventures: {}, currentId: null };
+    for (const row of (rows || [])) {
+      // row.data carries the full venture; ensure id and name are authoritative from the row
+      const v = Object.assign({}, row.data, {
+        id: row.id,
+        name: row.name,
+        updatedAt: row.updated_at ? new Date(row.updated_at).getTime() : Date.now()
+      });
+      newState.ventures[v.id] = v;
+    }
+    if (rows && rows.length > 0) newState.currentId = rows[0].id;
+    state = newState;
+  }
+
+  return { scheduleSync, runSync, loadFromRemote, applyRemoteRows, pendingDeletes };
+})();
+
+// =========================================================
+// AUTH WIDGET + LIFECYCLE
+// =========================================================
+function renderAuthWidget() {
+  const el = document.getElementById('auth-widget');
+  const banner = document.getElementById('anon-banner');
+  if (!el) return;
+  if (currentUser) {
+    el.innerHTML =
+      '<span class="auth-email" title="' + escapeHtml(currentUser.email) + '">' + escapeHtml(currentUser.email) + '</span>' +
+      '<button class="btn secondary small" onclick="prismSignOut()">Sign out</button>';
+    if (banner) banner.style.display = 'none';
+  } else {
+    el.innerHTML = '<a class="btn secondary small" href="/signin.html">Sign in</a>';
+    if (banner) banner.style.display = 'flex';
+  }
+}
+
+async function prismSignOut() {
+  if (!window.PRISM_AUTH) return;
+  await window.PRISM_AUTH.signOut();
+  // onAuthChange handler will fire SIGNED_OUT and reset state
+}
+
+async function bootAuth() {
+  if (!window.PRISM_AUTH) {
+    console.warn('[PRISM] Auth client not loaded; running in offline-only mode.');
+    renderAuthWidget(); // still toggle the banner
+    return;
+  }
+
+  // Subscribe first so we catch the INITIAL_SESSION event reliably
+  window.PRISM_AUTH.onAuthChange(async (event, session) => {
+    if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION' || event === 'TOKEN_REFRESHED') {
+      if (session && session.user) {
+        const wasAnon = !currentUser;
+        currentUser = session.user;
+        stateSource = 'supabase';
+        renderAuthWidget();
+        if (wasAnon && event === 'SIGNED_IN') {
+          // Fresh sign-in: handle migration / initial load
+          await handleFreshSignIn();
+        }
+      }
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      stateSource = 'local';
+      state = loadStateLocal();
+      renderAll();
+      renderAuthWidget();
+      toast('Signed out');
+    }
+  });
+
+  // Resolve current user on first paint
+  const user = await window.PRISM_AUTH.getUser();
+  if (user) {
+    currentUser = user;
+    stateSource = 'supabase';
+    const rows = await window.PRISM_SYNC.loadFromRemote();
+    if (rows && rows.length > 0) {
+      window.PRISM_SYNC.applyRemoteRows(rows);
+      renderAll();
+    } else if (rows && rows.length === 0) {
+      // Signed-in account with no ventures yet; keep the (possibly empty) local view
+      window.PRISM_SYNC.applyRemoteRows([]);
+      renderAll();
+    }
+  }
+  renderAuthWidget();
+}
+
+async function handleFreshSignIn() {
+  // Check whether the user has local ventures and zero remote ventures → offer import
+  const localState = loadStateLocal();
+  const localVentures = Object.values((localState && localState.ventures) || {});
+  const rows = await window.PRISM_SYNC.loadFromRemote();
+  const remoteCount = rows ? rows.length : 0;
+
+  if (localVentures.length > 0 && remoteCount === 0) {
+    showImportModal(localVentures);
+  } else {
+    window.PRISM_SYNC.applyRemoteRows(rows || []);
+    renderAll();
+  }
+}
+
+function showImportModal(localVentures) {
+  const modal = document.getElementById('import-modal');
+  const list = document.getElementById('import-list');
+  const status = document.getElementById('import-status');
+  const importBtn = document.getElementById('import-btn');
+  const skipBtn = document.getElementById('skip-btn');
+  if (!modal) return;
+
+  list.innerHTML = localVentures.map(v =>
+    '<li><b>' + escapeHtml(v.name || 'Untitled') + '</b> <span class="muted">' + (Object.keys(v.q || {}).length || 0) + ' frameworks</span></li>'
+  ).join('');
+  status.textContent = '';
+  status.className = 'import-status';
+  importBtn.disabled = false;
+  skipBtn.disabled = false;
+  modal.classList.add('active');
+
+  importBtn.onclick = async () => {
+    importBtn.disabled = true;
+    skipBtn.disabled = true;
+    status.className = 'import-status';
+    status.textContent = 'Importing…';
+    try {
+      // Re-key each venture with a fresh UUID; preserve all content
+      const rowsToInsert = localVentures.map(v => {
+        const newId = newVentureId();
+        return {
+          id: newId,
+          owner_id: currentUser.id,
+          name: v.name || 'Untitled venture',
+          data: Object.assign({}, v, { id: newId })
+        };
+      });
+      const { error } = await window.PRISM_AUTH.client.from('ventures').insert(rowsToInsert);
+      if (error) throw error;
+
+      // Clear localStorage now that import succeeded
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+
+      // Reload from Supabase
+      const fresh = await window.PRISM_SYNC.loadFromRemote();
+      window.PRISM_SYNC.applyRemoteRows(fresh || []);
+      renderAll();
+      modal.classList.remove('active');
+      toast('Imported ' + rowsToInsert.length + ' venture(s) to your account');
+    } catch (err) {
+      status.className = 'import-status err';
+      status.textContent = 'Import failed: ' + (err.message || 'unknown error') + '. Your local data is unchanged.';
+      importBtn.disabled = false;
+      skipBtn.disabled = false;
+    }
+  };
+
+  skipBtn.onclick = () => {
+    modal.classList.remove('active');
+    window.PRISM_SYNC.applyRemoteRows([]);
+    renderAll();
+    toast('Your account is empty. Your browser ventures are untouched.');
+  };
+}
+
+function newVentureId() {
+  if (window.crypto && typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
+  // Fallback for ancient browsers
+  return 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+}
 function blankVenture(name) {
-  const id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+  const id = newVentureId();
   const q = {}, evidence = {}, flag = {}, conf = {};
   Object.keys(FRAMEWORKS).forEach(fw => {
     q[fw] = {}; evidence[fw] = {}; flag[fw] = {}; conf[fw] = {};
@@ -598,6 +913,7 @@ function deleteCurrentVenture() {
   const v = getCurrent();
   if (!v) return;
   if (!confirm(`Delete "${v.name}"? This cannot be undone.`)) return;
+  if (window.PRISM_SYNC && currentUser) window.PRISM_SYNC.pendingDeletes.add(v.id);
   delete state.ventures[v.id];
   const remaining = Object.keys(state.ventures);
   state.currentId = remaining.length ? remaining[0] : null;
@@ -609,7 +925,7 @@ function duplicateVenture() {
   const v = getCurrent();
   if (!v) return;
   const copy = JSON.parse(JSON.stringify(v));
-  copy.id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+  copy.id = newVentureId();
   copy.name = v.name + ' (copy)';
   copy.createdAt = Date.now();
   copy.updatedAt = Date.now();
@@ -1080,9 +1396,19 @@ renderAll();
 // AI ANALYSIS (hosted version: uses /api/analyze server proxy)
 // =========================================================
 async function callAnalysisAPI(prompt) {
+  const headers = { 'Content-Type': 'application/json' };
+  // If signed in, include the access token so /api/analyze can attribute the call.
+  try {
+    if (window.PRISM_AUTH && currentUser) {
+      const session = await window.PRISM_AUTH.getSession();
+      if (session && session.access_token) {
+        headers['Authorization'] = 'Bearer ' + session.access_token;
+      }
+    }
+  } catch (e) { /* non-fatal — fall back to anonymous */ }
   const response = await fetch('/api/analyze', {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers,
     body: JSON.stringify({ prompt })
   });
   if (!response.ok) {
@@ -1369,7 +1695,18 @@ async function runAnalysis() {
         <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn" onclick="switchTab('assess')">Review &amp; refine in Assessment →</button>
           <button class="btn secondary" onclick="switchTab('risks')">Review risks →</button>
-          <button class="btn secondary" onclick="exportScorecard()">Export scorecard</button>
+          <button class="btn secondary" onclick="openBrandedReport()">Open branded report</button>
+          <button class="btn secondary" onclick="exportScorecard()">Export Markdown</button>
+        </div>
+        <div class="seta-cta">
+          <div class="seta-cta-text">
+            <h4>Looking at this and thinking "this would save my team a lot of time"?</h4>
+            <p>That's the conversation we're built for. SETA-ED can deploy the framework across your entire portfolio — scoring with your team, producing the longitudinal benchmarks and risk registers your current process doesn't generate, and (optionally) running coordinated hypothesis design across grantees.</p>
+          </div>
+          <div class="seta-cta-actions">
+            <a href="mailto:melina@seta-ed.com?subject=PRISM%20%E2%80%94%20portfolio%20engagement%20inquiry">Email SETA-ED</a>
+            <a href="https://seta-ed.com" class="secondary" target="_blank" rel="noopener">Learn more</a>
+          </div>
         </div>
         ${(scoringErrors.length || riskErrors.length) ? `<div style="margin-top:12px; padding:8px; background:#FEEBEB; border-radius:4px; font-size:12px; color:var(--red);"><b>Note:</b> ${scoringErrors.length} scoring field(s) and ${riskErrors.length} risk field(s) had unexpected formatting. Review the assessment for any blanks.</div>` : ''}
       </div>`;
@@ -1382,6 +1719,258 @@ async function runAnalysis() {
     btn.disabled = false;
   }
 }
+
+// =========================================================
+// BRANDED PDF REPORT (Patch 1)
+// =========================================================
+
+const BRANDING_KEY = 'prism_branding_v1';
+
+function loadBrandingPrefs() {
+  try {
+    const raw = localStorage.getItem(BRANDING_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch (e) { return {}; }
+}
+
+function saveBrandingPrefs() {
+  const nameInput = document.getElementById('branding-name');
+  const prefs = loadBrandingPrefs();
+  prefs.name = nameInput ? nameInput.value.trim() : '';
+  localStorage.setItem(BRANDING_KEY, JSON.stringify(prefs));
+  updateBrandingStatus();
+}
+
+function clearBrandingPrefs() {
+  localStorage.removeItem(BRANDING_KEY);
+  const nameInput = document.getElementById('branding-name');
+  if (nameInput) nameInput.value = '';
+  const logoInput = document.getElementById('branding-logo');
+  if (logoInput) logoInput.value = '';
+  updateBrandingStatus();
+  toast('Branding cleared.');
+}
+
+function handleLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 500 * 1024) {
+    toast('Logo file too large (max 500KB). Try a smaller image.');
+    event.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const prefs = loadBrandingPrefs();
+    prefs.logoDataUrl = e.target.result;
+    localStorage.setItem(BRANDING_KEY, JSON.stringify(prefs));
+    updateBrandingStatus();
+    toast('Logo saved.');
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateBrandingStatus() {
+  const status = document.getElementById('branding-status');
+  if (!status) return;
+  const prefs = loadBrandingPrefs();
+  const hasName = prefs.name && prefs.name.length > 0;
+  const hasLogo = !!prefs.logoDataUrl;
+  if (hasName && hasLogo) {
+    status.textContent = `Branded as: ${prefs.name} (logo set).`;
+  } else if (hasName) {
+    status.textContent = `Branded as: ${prefs.name} (no logo).`;
+  } else if (hasLogo) {
+    status.textContent = `Logo set, no foundation name.`;
+  } else {
+    status.textContent = 'No branding set — using SETA-ED defaults.';
+  }
+}
+
+function initBrandingControls() {
+  const prefs = loadBrandingPrefs();
+  const nameInput = document.getElementById('branding-name');
+  if (nameInput && prefs.name) nameInput.value = prefs.name;
+  updateBrandingStatus();
+}
+
+function brandedHtmlEscape(str) {
+  if (str == null) return '';
+  return String(str).replace(/[&<>"']/g, s => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[s]);
+}
+
+function openBrandedReport() {
+  const v = getCurrent();
+  if (!v) { toast('Add a venture first.'); return; }
+  const prefs = loadBrandingPrefs();
+  const prl = fwScore('prl', v), peoml = fwScore('peoml', v), proml = fwScore('proml', v);
+  const date = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  const funderName = prefs.name || '';
+  const funderLogo = prefs.logoDataUrl
+    ? `<img src="${prefs.logoDataUrl}" alt="${brandedHtmlEscape(funderName)} logo" class="funder-logo" />`
+    : '<div style="font-size:13px; color:#606060; font-weight:bold;">Portfolio Readiness Report</div>';
+  const funderNameDisplay = funderName
+    ? `<div class="funder-name">${brandedHtmlEscape(funderName)}</div>`
+    : '<div class="funder-name" style="font-weight:normal; font-style:italic;">[Foundation name not set]</div>';
+
+  const dimensionsTable = `
+    <table>
+      <thead>
+        <tr><th>Dimension</th><th>Score</th><th>Out of</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Prototype Readiness (PRL)</td><td><b>${prl}</b></td><td>9</td></tr>
+        <tr><td>People Readiness (PeoML)</td><td><b>${peoml}</b></td><td>5</td></tr>
+        <tr><td>Process Readiness (ProML)</td><td><b>${proml}</b></td><td>5</td></tr>
+      </tbody>
+    </table>`;
+
+  let dimensionBlocks = '';
+  Object.keys(FRAMEWORKS).forEach(fwKey => {
+    const fw = FRAMEWORKS[fwKey];
+    dimensionBlocks += `<h2>${brandedHtmlEscape(fw.title)} <span style="font-weight:normal; font-size:13px; color:#606060;">— ${brandedHtmlEscape(fw.sub)}</span></h2>`;
+    dimensionBlocks += `<p style="font-size:12px; color:#606060;">Achieved through level <b>${fwScore(fwKey,v)}</b> of ${fw.maxLvl}.</p>`;
+    fw.levels.forEach(l => {
+      const ach = levelAchieved(fwKey, l.num, v);
+      const conf = v.conf[fwKey][l.num];
+      dimensionBlocks += `<div class="level-block ${ach?'achieved':''}">`;
+      dimensionBlocks += `<h3>${brandedHtmlEscape(fw.title.replace(' Readiness',''))} ${l.num} — ${brandedHtmlEscape(l.name)} ${ach?'<span class="score-pill achieved">Achieved</span>':'<span class="score-pill muted">Not achieved</span>'} ${conf?`<span class="score-pill">Confidence: ${brandedHtmlEscape(conf)}</span>`:''}</h3>`;
+      l.qs.forEach((q,i) => {
+        const sc = v.q[fwKey][l.num][i];
+        const ev = v.evidence[fwKey][l.num][i];
+        const fg = v.flag[fwKey][l.num][i];
+        const mark = ['✗','◔','◐','✓'][sc];
+        const label = SCORE_LABELS[sc];
+        dimensionBlocks += `<div class="q">${mark} <b>${brandedHtmlEscape(label)}</b> — ${brandedHtmlEscape(q)}`;
+        if (ev) dimensionBlocks += `<div class="ev">Evidence: ${brandedHtmlEscape(ev)}</div>`;
+        if (fg) dimensionBlocks += `<div class="flag">Flag: ${brandedHtmlEscape(fg)}</div>`;
+        dimensionBlocks += `</div>`;
+      });
+      dimensionBlocks += `</div>`;
+    });
+  });
+
+  let riskTable = '';
+  if (v.risks && v.risks.length) {
+    riskTable = `<h2>DARPA-style risk plan</h2><table><thead><tr><th>Category</th><th>Status</th><th>Short-term mitigation</th><th>Long-term mitigation</th><th>Confidence</th></tr></thead><tbody>`;
+    v.risks.forEach(r => {
+      riskTable += `<tr><td>${brandedHtmlEscape(r.category||'(unspecified)')}</td><td>${brandedHtmlEscape(r.status||'review')}</td><td>${brandedHtmlEscape(r.shortTerm||'')}</td><td>${brandedHtmlEscape(r.longTerm||'')}</td><td>${brandedHtmlEscape(r.confidence||'medium')}</td></tr>`;
+    });
+    riskTable += `</tbody></table>`;
+  }
+
+  const docTitle = `${funderName ? funderName + ' — ' : ''}PRISM Scorecard: ${v.name}`;
+
+  const html = `<!doctype html>
+<html><head>
+<meta charset="utf-8" />
+<title>${brandedHtmlEscape(docTitle)}</title>
+<style>
+  body { margin:0; padding:0; background:#f0f2f5; font-family: Georgia, 'Times New Roman', serif; }
+  @media print {
+    body { background: white; }
+    .no-print { display: none !important; }
+    .print-toolbar { display: none !important; }
+    .print-doc { margin: 0 !important; padding: 40px !important; box-shadow: none !important; }
+  }
+  .print-doc { max-width: 760px; margin: 40px auto; padding: 40px; background: white; color: #1a1a1a; line-height: 1.55; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+  .print-toolbar { position: sticky; top: 0; background: #1F4E79; color: white; padding: 12px 24px; margin: -40px -40px 40px; display: flex; gap: 12px; align-items: center; justify-content: space-between; z-index: 100; }
+  .print-toolbar button { background: white; color: #1F4E79; border: none; padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+  .print-toolbar .hint { font-size: 12px; opacity: 0.85; }
+  h1 { font-size: 26px; margin: 0 0 6px; color: #1F4E79; }
+  h2 { font-size: 18px; margin: 28px 0 10px; color: #1F4E79; border-bottom: 1px solid #d9d9d9; padding-bottom: 4px; }
+  h3 { font-size: 14px; margin: 18px 0 6px; color: #404040; font-weight: bold; }
+  h4 { font-size: 12px; margin: 12px 0 4px; color: #606060; text-transform: uppercase; letter-spacing: 0.05em; }
+  .meta { font-size: 12px; color: #606060; margin-bottom: 24px; font-style: italic; }
+  .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 2px solid #1F4E79; }
+  .header-row .funder-logo { max-height: 60px; max-width: 200px; }
+  .header-row .funder-name { font-size: 13px; color: #606060; font-weight: bold; text-align: right; }
+  .seta-attribution { text-align: right; font-size: 10px; color: #808080; margin-top: 24px; padding-top: 12px; border-top: 1px solid #e5e5e5; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 12px; }
+  th, td { padding: 6px 10px; border: 1px solid #d9d9d9; text-align: left; vertical-align: top; }
+  th { background: #EFF4F9; font-weight: bold; color: #1F4E79; }
+  .score-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-left: 4px; background: #EFF4F9; color: #1F4E79; border: 1px solid #c8d8e8; }
+  .score-pill.achieved { background:#dff4e3; color:#1a6f3a; border-color:#9fd6af; }
+  .score-pill.muted { background:#f4f4f4; color:#606060; border-color:#ddd; }
+  .level-block { margin: 10px 0 16px; padding-left: 12px; border-left: 3px solid #d9d9d9; }
+  .level-block.achieved { border-left-color: #2E75B6; }
+  .q { margin: 4px 0; font-size: 12px; }
+  .q .ev { color: #555; font-size: 11px; margin-left: 18px; font-style: italic; }
+  .q .flag { color: #c2410c; font-size: 11px; margin-left: 18px; }
+  .footer-cta { margin-top: 36px; padding: 18px 22px; background: #EFF4F9; border-left: 4px solid #1F4E79; border-radius: 6px; font-size: 12px; color: #404040; }
+  .footer-cta h4 { margin-top: 0; color: #1F4E79; text-transform: none; font-size: 13px; letter-spacing: normal; }
+</style>
+</head>
+<body>
+<div class="print-doc">
+  <div class="print-toolbar no-print">
+    <div><b>Save as PDF</b> <span class="hint">— click the button at right, then choose "Save as PDF" as the destination.</span></div>
+    <button onclick="window.print()">Print / Save as PDF</button>
+  </div>
+  <div class="header-row">
+    ${funderLogo}
+    ${funderNameDisplay}
+  </div>
+  <h1>${brandedHtmlEscape(v.name)}</h1>
+  <div class="meta">Portfolio Readiness Scorecard · Assessed ${brandedHtmlEscape(date)} · ${(v.risks||[]).length} risks logged</div>
+  <h2>Three-dimensional readiness</h2>
+  ${dimensionsTable}
+  <p style="font-size:12px; color:#606060;"><b>Scoring legend.</b> For each rubric question, the venture's evidence is scored as: <b>No</b> (no evidence) · <b>Weak</b> (some evidence, below the level the question asks) · <b>Strong</b> (clear evidence at the level the question asks) · <b>Yes</b> (documented evidence with citation or artifact). A level is "achieved" when every question at that level scores Strong or Yes, and every level below is achieved.</p>
+  ${dimensionBlocks}
+  ${riskTable}
+  <div class="footer-cta">
+    <h4>Want help running this across your portfolio?</h4>
+    <p style="margin:0 0 8px;">SETA-ED offers methodologist-led deployments — running the framework across an entire grantee portfolio, producing the board-ready and funder-coalition-ready reporting your existing process doesn't generate. Three engagement tiers: Diligence Platform License, Portfolio Readiness Diagnostic, and Integrative Portfolio Partnership.</p>
+    <p style="margin:0;"><b>Talk to SETA-ED:</b> <a href="mailto:melina@seta-ed.com" style="color:#1F4E79;">melina@seta-ed.com</a> · <a href="https://seta-ed.com" style="color:#1F4E79;">seta-ed.com</a></p>
+  </div>
+  <div class="seta-attribution">
+    Methodology: SETA-ED Inclusive R&amp;D Readiness framework (Uncapher 2026, CC-BY 4.0).<br/>
+    Generated by PRISM at setaed-readiness-tools.vercel.app on ${brandedHtmlEscape(date)}.
+  </div>
+</div>
+</body></html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
+  if (!win) {
+    toast('Pop-up blocked. Allow pop-ups for this site to open the branded report.');
+    URL.revokeObjectURL(url);
+  }
+}
+
+// Initialize branding controls after DOM and all const declarations are ready.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBrandingControls);
+} else {
+  initBrandingControls();
+}
+
+// Boot the auth layer last — depends on everything above being defined.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootAuth);
+} else {
+  bootAuth();
+}
 </script>
+
+<!-- ====== IMPORT MODAL (first-time sign-in) ====== -->
+<div id="import-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="import-modal-title">
+  <div class="modal-card">
+    <h3 id="import-modal-title">Import your browser data?</h3>
+    <p class="modal-lede">We found ventures saved in this browser. Import them to your account so they sync across devices, or skip and keep them browser-only.</p>
+    <ul id="import-list" class="import-list"></ul>
+    <div class="modal-actions">
+      <button id="skip-btn" class="btn secondary">Skip — keep browser-only</button>
+      <button id="import-btn" class="btn">Import to my account</button>
+    </div>
+    <div id="import-status" class="import-status"></div>
+  </div>
+</div>
+
 </body>
 </html>
