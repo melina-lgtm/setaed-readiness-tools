@@ -4,16 +4,19 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
 <title>The Three Readiness Dimensions — PRISM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root { color-scheme: light;
-  --navy: #1F3A5F; --navy-dark: #142747; --orange: #E8861C;
-  --blue-mid: #5B7FB8; --blue-light: #82A4D0;
-  --bg: #F5F7FA; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B7280;
-  --border: #E5E7EB; --tint: #EEF3F8;
+  --navy: #2E4488; --navy-dark: #223466; --orange: #E0A129;
+  --blue-mid: #12907C; --blue-light: #E0A129;
+  --bg: #F7F8FC; --card: #FFFFFF; --text: #131A2A; --muted: #5A6277;
+  --border: #E7EAF3; --tint: #EDEFF8;
 }
 * { box-sizing: border-box; }
-body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
-  background:var(--bg); color:var(--text); line-height:1.55; }
+body { margin:0; font-family:'Libre Franklin',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
 .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
 .nav-back { color: var(--muted); text-decoration: none; font-size: 13px; }
 .nav-back:hover { color: var(--navy); }
@@ -71,6 +74,32 @@ section .sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
 .btn.secondary:hover { background: var(--tint); }
 
 .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+
+/* --- PRISM Spectrum refresh (presentation only) --- */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:4px;z-index:9999;background:linear-gradient(90deg,#4362D0 0 33.33%,#12A08A 33.33% 66.66%,#E0A129 66.66% 100%);}
+h1,h2,h3{letter-spacing:-.022em;}
+.kicker{color:#4362D0;}
+.dim-card{border-radius:16px;box-shadow:0 2px 10px rgba(19,26,42,.04);border-top-width:0;position:relative;overflow:hidden;}
+.dim-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--navy);}
+.dim-card.peoml::before{background:#12A08A;}
+.dim-card.proml::before{background:#E0A129;}
+.dim-card .pill{background:#4362D0;}
+.dim-card.peoml .pill{background:#12A08A;}
+.dim-card.proml .pill{background:#E0A129;color:#131A2A;}
+.dim-card a{border-radius:10px;background:#131A2A;}
+.dim-card a:hover{background:#000;}
+.compare-table{border-radius:14px;}
+.compare-table td.col-prl{border-left-color:#4362D0;}
+.compare-table td.col-peoml{border-left-color:#12A08A;}
+.compare-table td.col-proml{border-left-color:#E0A129;}
+.three-why{border-radius:14px;}
+.lineage{background:#FBF3E2;border-left-color:#E0A129;border-radius:10px;}
+.lineage a{color:#2E4488;font-weight:600;text-decoration:underline;text-underline-offset:2px;}
+.btn{border-radius:10px;background:#131A2A;}
+.btn:hover{background:#000;}
+.btn.secondary{background:#fff;color:#131A2A;}
+.btn.secondary:hover{background:var(--tint);}
+.tagline{color:#12A08A;}
 </style>
 </head>
 <body>
@@ -97,7 +126,7 @@ section .sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
     <span class="pill">People</span>
     <h2>People Readiness Levels</h2>
     <div class="sublabel">PeoML · 5 levels</div>
-    <p>Who is at the table — and who holds decision-making power? Five stages of team composition and community partnership. Answers "do the people building this product have the standing to build it for the population it serves?"</p>
+    <p>Who is at the table and who holds decision-making power? Five stages of team composition and community partnership. Answers "do the people building this product have the standing to build it for the population it serves?"</p>
     <div class="levels-preview">5 stages from <b>Equity stated</b> to <b>Community co-ownership</b></div>
     <a href="/peoml.html">View all 5 levels →</a>
   </div>
@@ -122,7 +151,7 @@ section .sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
     <p>PRISM's three ladders are designed to make this visible <i>before</i> it shows up in outcomes. <b>Every PRISM assessment returns three scores, not one.</b></p>
   </div>
   <div class="lineage">
-    <b>Methodology lineage:</b> PRL adapts NASA's Technology Readiness Levels (TRL) and the tiered-support practice of ARPAs (DARPA, ARPA-E, IARPA, ARPA-H) to education R&D. PeoML and ProML operationalize the People / Process / Prototype dimensions of the Inclusive R&D model originally developed by Dr. Melina Uncapher through the $50M EF+Math R&D program she led, and documented in the EF+Math Inclusive R&D Toolkit. The combined three-dimensional architecture is unique to SETA-ED.
+    <b>Methodology lineage:</b> PRL adapts NASA's Technology Readiness Levels (TRL) and the tiered-support practice of ARPAs (DARPA, ARPA-E, IARPA, ARPA-H) to education R&D. PeoML and ProML operationalize the People / Process / Prototype dimensions of the Inclusive R&D model originally developed by the EF+Math team, led by Dr. Melina Uncapher and Dr. Aubrey Francisco, and documented in the <a href="https://efmathprogram.org/inclusive-research-development-and-evaluation-toolkit/" target="_blank" rel="noopener">EF+Math Inclusive R&D Toolkit</a>, however this rubric and the combined three-dimensional architecture is unique to SETA-ED.
   </div>
 </section>
 
@@ -160,13 +189,13 @@ section .sub { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
       </tr>
     </tbody>
   </table>
-  <p style="font-size:12px; color:var(--muted); margin-top:14px;">The mapping is approximate, not strict. A project can be PRL 5 (developing prototype) and PeoML 1 (equity stated only) — and that gap is itself the most important thing PRISM surfaces.</p>
+  <p style="font-size:12px; color:var(--muted); margin-top:14px;">The mapping is approximate, not strict. A project can be PRL 5 (developing prototype) and PeoML 1 (equity stated only), and identifying that gap is one of the most important things that PRISM surfaces.</p>
 </section>
 
 <!-- CTA -->
 <section>
   <h2>Try it on your own project</h2>
-  <p class="sub">Two interfaces, same rubric.</p>
+  <p class="sub">Whether you are evaluating your own project or you are a portfolio manager evaluating proposed projects, we have a tool for you based on shared language and a common benchmarking rubric.</p>
   <div class="cta-bar">
     <a class="btn" href="/self-assessment.html">Open PRISM Self-Assessment</a>
     <a class="btn secondary" href="/diligence-rubric.html">Open PRISM Portfolio Analysis</a>

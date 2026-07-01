@@ -5,17 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
 <title>Sign in — PRISM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root { color-scheme: light;
-  --navy: #1F3A5F; --navy-dark: #142747; --orange: #E8861C;
-  --green: #2E7D5C; --red: #B83A3A; --blue: #4A78B5;
-  --bg: #F5F7FA; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B7280;
-  --border: #E5E7EB; --tint: #EEF3F8;
+  --navy: #2E4488; --navy-dark: #223466; --orange: #E0A129;
+  --green: #1E9E76; --red: #B83A3A; --blue: #12A08A;
+  --bg: #F7F8FC; --card: #FFFFFF; --text: #131A2A; --muted: #5A6277;
+  --border: #E7EAF3; --tint: #EDEFF8;
 }
 * { box-sizing: border-box; }
-body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+body { margin:0; font-family:'Libre Franklin',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
   background:var(--bg); color:var(--text); display:flex; min-height:100vh;
-  align-items:center; justify-content:center; padding:24px; line-height:1.5; }
+  align-items:center; justify-content:center; padding:24px; line-height:1.5; -webkit-font-smoothing:antialiased; }
 .card { background:var(--card); border:1px solid var(--border); border-radius:10px;
   padding:32px; max-width:440px; width:100%; box-shadow:0 1px 3px rgba(0,0,0,.04); }
 .brand-row { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
@@ -45,6 +48,15 @@ button.primary:disabled { opacity:.5; cursor:not-allowed; }
 .back a:hover { text-decoration:underline; }
 .fine { margin-top:18px; font-size:11px; color:var(--muted); line-height:1.5; }
 .fine a { color:var(--navy); }
+
+/* --- PRISM Spectrum refresh (presentation only) --- */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:4px;z-index:9999;background:linear-gradient(90deg,#4362D0 0 33.33%,#12A08A 33.33% 66.66%,#E0A129 66.66% 100%);}
+.card{border-radius:16px;box-shadow:0 14px 44px -18px rgba(19,26,42,.24);}
+h1{letter-spacing:-.02em;}
+input[type="email"]{border-radius:9px;}
+input[type="email"]:focus{border-color:#2E4488;box-shadow:0 0 0 3px rgba(46,68,136,.14);}
+button.primary{border-radius:9px;background:#131A2A;}
+button.primary:hover{background:#000;}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/config.js"></script>

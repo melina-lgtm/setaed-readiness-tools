@@ -4,16 +4,19 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
 <title>People Readiness Levels (PeoML) — PRISM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root { color-scheme: light;
-  --navy: #1F3A5F; --navy-dark: #142747; --orange: #E8861C;
-  --dim: #5B7FB8; --dim-tint: #EEF2F8;
-  --bg: #F5F7FA; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B7280;
-  --border: #E5E7EB;
+  --navy: #2E4488; --navy-dark: #223466; --orange: #E0A129;
+  --dim: #12907C; --dim-tint: #E7F5F1;
+  --bg: #F7F8FC; --card: #FFFFFF; --text: #131A2A; --muted: #5A6277;
+  --border: #E7EAF3;
 }
 * { box-sizing: border-box; }
-body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
-  background:var(--bg); color:var(--text); line-height:1.55; }
+body { margin:0; font-family:'Libre Franklin',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.55; -webkit-font-smoothing:antialiased; }
 .wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
 
 /* HEADER */
@@ -35,8 +38,8 @@ h1 { color: var(--navy); margin: 6px 0 6px; font-size: 32px; line-height: 1.2; }
 .ladder h3 { color: var(--navy); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 14px; }
 .rung { position: relative; padding: 8px 0 8px 28px; cursor: pointer; transition: background .12s; }
 .rung:hover { background: var(--dim-tint); }
-.rung::before { content: ""; position: absolute; left: 8px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: var(--card); border: 2px solid var(--border); }
-.rung::after { content: ""; position: absolute; left: 13px; top: 26px; width: 2px; height: calc(100% - 12px); background: var(--border); }
+.rung::before { content: ""; position: absolute; left: 8px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: var(--card); border: 2px solid var(--border); z-index: 1; }
+.rung::after { content: ""; position: absolute; left: 13px; top: 26px; width: 2px; height: calc(100% - 12px); background: var(--border); z-index: 0; }
 .rung:last-child::after { display: none; }
 .rung.dim::before { background: var(--dim); border-color: var(--dim); }
 .rung-num { font-weight: 700; font-size: 11px; color: var(--dim); }
@@ -79,6 +82,20 @@ h1 { color: var(--navy); margin: 6px 0 6px; font-size: 32px; line-height: 1.2; }
 .controls button:hover { color: var(--navy); border-color: var(--dim); }
 
 .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+
+/* --- PRISM Spectrum refresh (presentation only) --- */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:4px;z-index:9999;background:linear-gradient(90deg,#4362D0 0 33.33%,#12A08A 33.33% 66.66%,#E0A129 66.66% 100%);}
+h1,h2,h3{letter-spacing:-.022em;}
+.kicker{color:var(--dim);}
+.ladder{border-radius:16px;}
+.level-card{border-radius:14px;}
+.level-card.expanded{box-shadow:0 8px 26px -12px rgba(19,26,42,.22);}
+.btn{border-radius:10px;background:#131A2A;}
+.btn:hover{background:#000;}
+.btn.secondary{background:#fff;color:#131A2A;}
+.btn.secondary:hover{background:var(--dim-tint);}
+.level-body .advance{background:#FBF3E2;border-left-color:#E0A129;border-radius:8px;}
+.cta-bar{border-radius:14px;}
 </style>
 </head>
 <body>
@@ -121,11 +138,11 @@ h1 { color: var(--navy); margin: 6px 0 6px; font-size: 32px; line-height: 1.2; }
           <p class="desc">Equity is named as a value in mission, vision, or pitch language. The team has not yet operationalized that value into who is on the team or who is consulted.</p>
           <h4>Self-assessment questions</h4>
           <ul>
-            <li>Is equity — including the population your product is meant to serve — named explicitly in your mission or theory of change?</li>
+            <li>Is equity, including the population your product is meant to serve, named explicitly in your mission or theory of change?</li>
             <li>Can the team articulate, beyond marketing language, what equity means for your specific R&amp;D project?</li>
             <li>Is there at least one team member with explicit responsibility for thinking about equity (not as a side role, but as an accountable function)?</li>
           </ul>
-          <div class="advance"><b>To advance to PeoML 2:</b> move from naming equity to consulting community members from the priority population on the underlying design choices — not just user-testing them after the fact. Document at least one design decision shaped by that consultation.</div>
+          <div class="advance"><b>To advance to PeoML 2:</b> move from naming equity to consulting community members from the priority population on the underlying design choices, not just user-testing them after you have built the product. Document at least one design decision shaped by that consultation.</div>
         </div>
       </div>
 
@@ -139,11 +156,11 @@ h1 { color: var(--navy); margin: 6px 0 6px; font-size: 32px; line-height: 1.2; }
           <p class="desc">Community members from the priority population have been consulted at key R&amp;D moments. Consultation is one-directional; community members do not yet shape decisions.</p>
           <h4>Self-assessment questions</h4>
           <ul>
-            <li>Have community members from the priority population been consulted on the product concept and approach — not just user-tested, but engaged on the underlying design choices?</li>
+            <li>Have community members from the priority population been consulted on the product concept and approach? Not just user-tested, but engaged on the underlying design choices?</li>
             <li>Have those consultations shaped at least one substantive design decision (a feature, a measurement, a partnership choice) in a way you can document?</li>
             <li>Is there a documented mechanism for ongoing community consultation, not just one-time interviews at funder request?</li>
           </ul>
-          <div class="advance"><b>To advance to PeoML 3:</b> move community members from consultation to formal, paid presence in defined R&amp;D moments — and into team composition itself, including in technical and decision-making roles.</div>
+          <div class="advance"><b>To advance to PeoML 3:</b> move community members from consultation to formal, compensated presence in defined R&amp;D moments, and into team composition itself, including in technical and decision-making roles.</div>
         </div>
       </div>
 
@@ -157,11 +174,11 @@ h1 { color: var(--navy); margin: 6px 0 6px; font-size: 32px; line-height: 1.2; }
           <p class="desc">Community members from the priority population are present in defined R&amp;D moments and in some team functions. They participate but do not yet co-lead.</p>
           <h4>Self-assessment questions</h4>
           <ul>
-            <li>Do community members from the priority population hold formal, paid roles on the team or advisory structure?</li>
+            <li>Do community members from the priority population(s) hold formal, paid roles on the team or advisory structure?</li>
             <li>Are community members present in defined R&amp;D moments such as prototype review, evidence interpretation, or roadmap planning?</li>
-            <li>Does the team's composition — not just its advisors — reflect the population the product is meant to serve, including in technical and decision-making roles?</li>
+            <li>Does the team's composition, not just its advisors, reflect the population the product is meant to serve, including in technical and decision-making roles?</li>
           </ul>
-          <div class="advance"><b>To advance to PeoML 4:</b> shift community members from participation to co-leadership. Establish documented decision rights, symmetric accountability for outcomes, and compensation commensurate with their decision-making role — not consultant or honorarium rates.</div>
+          <div class="advance"><b>To advance to PeoML 4:</b> shift community members from participation to co-leadership. Establish documented decision rights, symmetric accountability for outcomes, and compensation commensurate with their decision-making role, not just consultant or honorarium rates.</div>
         </div>
       </div>
 
@@ -179,7 +196,7 @@ h1 { color: var(--navy); margin: 6px 0 6px; font-size: 32px; line-height: 1.2; }
             <li>Is community accountability symmetric: are community partners accountable for outcomes alongside the founding team, with shared metrics?</li>
             <li>Are community partners compensated commensurate with their decision-making role, not at consultant or honorarium rates?</li>
           </ul>
-          <div class="advance"><b>To advance to PeoML 5:</b> embed community standing in governance — bylaws, board composition, equity arrangements. Share decision-making power on the most consequential decisions: pivots, scale, monetization, intellectual property.</div>
+          <div class="advance"><b>To advance to PeoML 5:</b> embed community standing in governance such as bylaws, board composition, equity arrangements. Share decision-making power on the most consequential decisions: pivots, scale, monetization, intellectual property.</div>
         </div>
       </div>
 
@@ -193,9 +210,9 @@ h1 { color: var(--navy); margin: 6px 0 6px; font-size: 32px; line-height: 1.2; }
           <p class="desc">Community holds shared decision-making power and equity in outcomes. Governance, ownership, and revenue-sharing reflect community standing as co-owners.</p>
           <h4>Self-assessment questions</h4>
           <ul>
-            <li>Do governance documents — bylaws, board composition, equity arrangements — reflect community standing as co-owners of the work?</li>
+            <li>Do governance documents (e.g., bylaws, board composition, equity arrangements) reflect community standing as co-owners of the work?</li>
             <li>Is decision-making power shared on the most consequential decisions (pivots, scale, monetization, intellectual property)?</li>
-            <li>Is there a revenue, equity, or asset-sharing arrangement that gives the community served a stake in the long-term value the venture creates?</li>
+            <li>Is there a revenue, equity, or asset-sharing arrangement that gives the community served a stake in the long-term value the venture creates? Or other non-monetary but high-value compensation (e.g., co-authorship of publications, credentials that can be used for career advancement)?</li>
           </ul>
           <div class="advance"><b>Top of the ladder.</b> A team at PeoML 5 has converted the language of equity into structural co-ownership. PRL and ProML are the next questions: does the prototype maturity and process discipline match the team maturity?</div>
         </div>

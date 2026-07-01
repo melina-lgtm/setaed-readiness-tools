@@ -4,20 +4,23 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
 <title>PRISM Portfolio Analysis — SETA-ED</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/config.js"></script>
 <script src="/auth.js"></script>
 <style>
 :root { color-scheme: light;
-  --navy: #1F3A5F; --navy-dark: #142747; --orange: #E8861C;
-  --green: #2E7D5C; --red: #B83A3A; --amber: #C57B0E; --blue: #4A78B5;
-  --bg: #F5F7FA; --card: #FFFFFF; --text: #1A1A1A; --muted: #6B7280;
-  --border: #E5E7EB; --tint: #EEF3F8; --warn: #FFF8EC;
+  --navy: #2E4488; --navy-dark: #223466; --orange: #E0A129;
+  --green: #1E9E76; --red: #B83A3A; --amber: #C57B0E; --blue: #12A08A;
+  --bg: #F7F8FC; --card: #FFFFFF; --text: #131A2A; --muted: #5A6277;
+  --border: #E7EAF3; --tint: #EDEFF8; --warn: #FBF3E2;
 }
 * { box-sizing: border-box; }
-body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
-  background:var(--bg); color:var(--text); line-height:1.5; }
+body { margin:0; font-family:'Libre Franklin',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; }
 .wrap { max-width: 1320px; margin: 0 auto; padding: 16px 18px 80px; }
 
 /* HEADER */
@@ -39,7 +42,7 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 
 /* HOWTO BANNER */
 .howto { display:flex; gap:14px; align-items:flex-start; background:linear-gradient(180deg, #FFF8EC 0%, #FFFCF4 100%); border:1px solid #F2D89A; border-left:4px solid var(--orange); border-radius:8px; padding:12px 16px; margin:14px 0 0; }
-.howto-label { color:var(--orange); font-weight:700; font-size:11px; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; padding-top:2px; min-width:130px; }
+.howto-label { color:var(--orange); font-weight:700; font-size:11px; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; padding-top:2px; min-width:130px; flex:none; }
 .howto-text { font-size:13px; color:var(--text); line-height:1.55; }
 .howto-text b { color:var(--navy); }
 @media (max-width:680px){ .howto { flex-direction:column; gap:6px; } .howto-label { min-width:0; } }
@@ -71,7 +74,7 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 .score-pill .num { font-size:22px; font-weight:700; color:var(--navy); font-variant-numeric:tabular-nums; }
 .score-pill .of { font-size:12px; color:var(--muted); }
 .score-pill.peoml .num { color:var(--blue); }
-.score-pill.proml .num { color:#82A4D0; }
+.score-pill.proml .num { color:#E0A129; }
 
 /* LADDERS */
 .ladders { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
@@ -145,7 +148,7 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 .minibar { display:inline-block; height:8px; background:var(--border); border-radius:4px; vertical-align:middle; margin-right:6px; position:relative; overflow:hidden; }
 .minibar-fill { height:100%; background:var(--navy); border-radius:4px; }
 .minibar-fill.peoml { background:var(--blue); }
-.minibar-fill.proml { background:#82A4D0; }
+.minibar-fill.proml { background:#E0A129; }
 
 /* EXPORT */
 .export-bar { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 18px; margin-top:14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
@@ -161,15 +164,15 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 .branding-controls .btn-clear-branding { background:none; border:none; color:var(--muted); font-size:11px; text-decoration:underline; cursor:pointer; padding:0; }
 
 /* SETA-ED CTA (Patch 2) */
-.seta-cta { margin-top:18px; padding:16px 20px; background:linear-gradient(135deg,#EFF4F9 0%,#f7fafd 100%); border-left:4px solid #1F4E79; border-radius:8px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+.seta-cta { margin-top:18px; padding:16px 20px; background:linear-gradient(135deg,#EEF1FB 0%,#f7fafd 100%); border-left:4px solid #2E4488; border-radius:8px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
 .seta-cta .seta-cta-text { flex:1; min-width:280px; font-size:13px; color:#404040; line-height:1.55; }
-.seta-cta .seta-cta-text h4 { margin:0 0 4px; font-size:14px; color:#1F4E79; font-weight:bold; }
+.seta-cta .seta-cta-text h4 { margin:0 0 4px; font-size:14px; color:#2E4488; font-weight:bold; }
 .seta-cta .seta-cta-text p { margin:0; }
 .seta-cta .seta-cta-actions { display:flex; gap:8px; flex-wrap:wrap; }
-.seta-cta .seta-cta-actions a { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; background:#1F4E79; color:white; text-decoration:none; border-radius:6px; font-size:13px; font-weight:600; transition:background 0.2s; }
-.seta-cta .seta-cta-actions a:hover { background:#163a5c; }
-.seta-cta .seta-cta-actions a.secondary { background:white; color:#1F4E79; border:1px solid #c8d8e8; }
-.seta-cta .seta-cta-actions a.secondary:hover { background:#EFF4F9; }
+.seta-cta .seta-cta-actions a { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; background:#2E4488; color:white; text-decoration:none; border-radius:6px; font-size:13px; font-weight:600; transition:background 0.2s; }
+.seta-cta .seta-cta-actions a:hover { background:#223466; }
+.seta-cta .seta-cta-actions a.secondary { background:white; color:#2E4488; border:1px solid #c9d4ea; }
+.seta-cta .seta-cta-actions a.secondary:hover { background:#EEF1FB; }
 
 /* OVERVIEW */
 .overview-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
@@ -199,8 +202,8 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 #proposal-text { width:100%; min-height:240px; padding:12px; font-size:13px; border:1px solid var(--border); border-radius:6px; font-family:ui-monospace,Menlo,monospace; resize:vertical; background:#FAFBFC; }
 .analyze-controls { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
 .analyze-controls input { flex:1; min-width:200px; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; }
-.analyze-controls .ai-btn { background:linear-gradient(135deg, #1F3A5F, #4A78B5); padding:8px 16px; font-size:13px; }
-.analyze-controls .ai-btn:hover { background:linear-gradient(135deg, #142747, #3A6298); }
+.analyze-controls .ai-btn { background:linear-gradient(135deg, #2E4488, #12A08A); padding:8px 16px; font-size:13px; }
+.analyze-controls .ai-btn:hover { background:linear-gradient(135deg, #223466, #0E8271); }
 .analyze-controls .ai-btn:disabled { opacity:0.5; cursor:wait; }
 .spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--border); border-top-color:var(--orange); border-radius:50%; animation:spin 1s linear infinite; vertical-align:middle; margin-right:8px; }
 @keyframes spin { to { transform:rotate(360deg); } }
@@ -244,6 +247,35 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 .modal-card .import-status { margin-top:10px; font-size:12px; min-height:16px; color:var(--muted); }
 .modal-card .import-status.err { color:var(--red); }
 .modal-card .import-status.ok  { color:var(--green); }
+
+/* --- PRISM Spectrum refresh (presentation only) --- */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:4px;z-index:10000;background:linear-gradient(90deg,#4362D0 0 33.33%,#12A08A 33.33% 66.66%,#E0A129 66.66% 100%);}
+h1,h2{letter-spacing:-.015em;}
+.brand{color:#2E4488;}
+.tab.active{border-bottom-color:#4362D0;}
+.tab .badge{background:#4362D0;}
+.btn{border-radius:9px;background:#131A2A;}
+.btn:hover{background:#000;}
+.btn.secondary{background:#fff;color:#131A2A;}
+.btn.secondary:hover{background:var(--tint);}
+.score-bar,.ladder,.radar-card,.rec-card,.overview-card,.analyze-card,.risks-table,.portfolio-table,.export-bar,.empty-state,.modal-card{border-radius:14px;}
+.score-pill{border-radius:10px;}
+.score-pill .num{color:#2E4488;}
+.score-pill.peoml .num{color:#12A08A;}
+.score-pill.proml .num{color:#E0A129;}
+.minibar-fill{background:#2E4488;}
+.minibar-fill.peoml{background:#12A08A;}
+.minibar-fill.proml{background:#E0A129;}
+.rung.current::before{box-shadow:0 0 0 4px rgba(224,161,41,.18);}
+.analyze-card .step{border-left-color:#E0A129;}
+.seta-cta{background:linear-gradient(135deg,#EEF1FB,#f7f9fe);border-left-color:#2E4488;}
+.seta-cta .seta-cta-text h4{color:#2E4488;}
+.seta-cta .seta-cta-actions a{background:#2E4488;}
+.seta-cta .seta-cta-actions a:hover{background:#223466;}
+.seta-cta .seta-cta-actions a.secondary{color:#2E4488;border-color:#c9d4ea;}
+.seta-cta .seta-cta-actions a.secondary:hover{background:#EEF1FB;}
+.analyze-controls .ai-btn{background:linear-gradient(135deg,#2E4488,#12A08A);}
+.analyze-controls .ai-btn:hover{background:linear-gradient(135deg,#223466,#0E8271);}
 </style>
 </head>
 <body>
@@ -485,7 +517,7 @@ h1 { font-size:18px; color:var(--navy); margin:0; }
 // =========================================================
 const FRAMEWORKS = {
   prl: {
-    title:'Prototype Readiness', sub:'PRL · 9 levels · prototype maturity', color:'#1F3A5F', maxLvl:9,
+    title:'Prototype Readiness', sub:'PRL · 9 levels · prototype maturity', color:'#4362D0', maxLvl:9,
     levels: [
       { num:1, name:'Basic Research', desc:'Idea grounded in research; no prototype yet.', qs:[
         'Is the idea grounded in specific, citable research from learning science, cognitive science, or a related field?',
@@ -535,7 +567,7 @@ const FRAMEWORKS = {
     ],
   },
   peoml: {
-    title:'People Readiness', sub:'PeoML · 5 levels · team & community', color:'#4A78B5', maxLvl:5,
+    title:'People Readiness', sub:'PeoML · 5 levels · team & community', color:'#12A08A', maxLvl:5,
     levels: [
       { num:1, name:'Equity stated', desc:'Equity named as a value but not yet operationalized in team/consultation.', qs:[
         'Is equity (including the priority population) named explicitly in the mission, theory of change, or external materials?',
@@ -565,7 +597,7 @@ const FRAMEWORKS = {
     ],
   },
   proml: {
-    title:'Process Readiness', sub:'ProML · 5 levels · R&D-cycle equity', color:'#82A4D0', maxLvl:5,
+    title:'Process Readiness', sub:'ProML · 5 levels · R&D-cycle equity', color:'#E0A129', maxLvl:5,
     levels: [
       { num:1, name:'Equity defined', desc:'Equity goals explicit, measurable, tied to specific population.', qs:[
         'Are equity goals explicit and measurable (specific subgroups, outcomes, decisions they should shape)?',
@@ -1110,8 +1142,8 @@ function renderRadar(prl, peoml, proml) {
       labels:['Prototype','People','Process'],
       datasets:[{
         label:'Readiness', data:[prl/9*100, peoml/5*100, proml/5*100],
-        backgroundColor:'rgba(31,58,95,0.18)', borderColor:'#1F3A5F', borderWidth:2,
-        pointBackgroundColor:'#E8861C', pointBorderColor:'#fff', pointRadius:5,
+        backgroundColor:'rgba(46,68,136,0.18)', borderColor:'#2E4488', borderWidth:2,
+        pointBackgroundColor:'#E0A129', pointBorderColor:'#fff', pointRadius:5,
       }]
     },
     options:{
@@ -1123,7 +1155,7 @@ function renderRadar(prl, peoml, proml) {
           return labs[ctx.dataIndex]+': '+raw[ctx.dataIndex]+' / '+max[ctx.dataIndex];
         }}}
       },
-      scales:{ r:{ min:0, max:100, ticks:{display:false, stepSize:25}, grid:{color:'#E5E7EB'}, angleLines:{color:'#E5E7EB'}, pointLabels:{font:{size:13,weight:'600'},color:'#1F3A5F'} }}
+      scales:{ r:{ min:0, max:100, ticks:{display:false, stepSize:25}, grid:{color:'#E5E7EB'}, angleLines:{color:'#E5E7EB'}, pointLabels:{font:{size:13,weight:'600'},color:'#2E4488'} }}
     }
   });
 }
@@ -1878,31 +1910,31 @@ function openBrandedReport() {
     .print-doc { margin: 0 !important; padding: 40px !important; box-shadow: none !important; }
   }
   .print-doc { max-width: 760px; margin: 40px auto; padding: 40px; background: white; color: #1a1a1a; line-height: 1.55; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-  .print-toolbar { position: sticky; top: 0; background: #1F4E79; color: white; padding: 12px 24px; margin: -40px -40px 40px; display: flex; gap: 12px; align-items: center; justify-content: space-between; z-index: 100; }
-  .print-toolbar button { background: white; color: #1F4E79; border: none; padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+  .print-toolbar { position: sticky; top: 0; background: #2E4488; color: white; padding: 12px 24px; margin: -40px -40px 40px; display: flex; gap: 12px; align-items: center; justify-content: space-between; z-index: 100; }
+  .print-toolbar button { background: white; color: #2E4488; border: none; padding: 8px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
   .print-toolbar .hint { font-size: 12px; opacity: 0.85; }
-  h1 { font-size: 26px; margin: 0 0 6px; color: #1F4E79; }
-  h2 { font-size: 18px; margin: 28px 0 10px; color: #1F4E79; border-bottom: 1px solid #d9d9d9; padding-bottom: 4px; }
+  h1 { font-size: 26px; margin: 0 0 6px; color: #2E4488; }
+  h2 { font-size: 18px; margin: 28px 0 10px; color: #2E4488; border-bottom: 1px solid #d9d9d9; padding-bottom: 4px; }
   h3 { font-size: 14px; margin: 18px 0 6px; color: #404040; font-weight: bold; }
   h4 { font-size: 12px; margin: 12px 0 4px; color: #606060; text-transform: uppercase; letter-spacing: 0.05em; }
   .meta { font-size: 12px; color: #606060; margin-bottom: 24px; font-style: italic; }
-  .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 2px solid #1F4E79; }
+  .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 2px solid #2E4488; }
   .header-row .funder-logo { max-height: 60px; max-width: 200px; }
   .header-row .funder-name { font-size: 13px; color: #606060; font-weight: bold; text-align: right; }
   .seta-attribution { text-align: right; font-size: 10px; color: #808080; margin-top: 24px; padding-top: 12px; border-top: 1px solid #e5e5e5; }
   table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 12px; }
   th, td { padding: 6px 10px; border: 1px solid #d9d9d9; text-align: left; vertical-align: top; }
-  th { background: #EFF4F9; font-weight: bold; color: #1F4E79; }
-  .score-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-left: 4px; background: #EFF4F9; color: #1F4E79; border: 1px solid #c8d8e8; }
+  th { background: #EEF1FB; font-weight: bold; color: #2E4488; }
+  .score-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-left: 4px; background: #EEF1FB; color: #2E4488; border: 1px solid #c9d4ea; }
   .score-pill.achieved { background:#dff4e3; color:#1a6f3a; border-color:#9fd6af; }
   .score-pill.muted { background:#f4f4f4; color:#606060; border-color:#ddd; }
   .level-block { margin: 10px 0 16px; padding-left: 12px; border-left: 3px solid #d9d9d9; }
-  .level-block.achieved { border-left-color: #2E75B6; }
+  .level-block.achieved { border-left-color: #4362D0; }
   .q { margin: 4px 0; font-size: 12px; }
   .q .ev { color: #555; font-size: 11px; margin-left: 18px; font-style: italic; }
   .q .flag { color: #c2410c; font-size: 11px; margin-left: 18px; }
-  .footer-cta { margin-top: 36px; padding: 18px 22px; background: #EFF4F9; border-left: 4px solid #1F4E79; border-radius: 6px; font-size: 12px; color: #404040; }
-  .footer-cta h4 { margin-top: 0; color: #1F4E79; text-transform: none; font-size: 13px; letter-spacing: normal; }
+  .footer-cta { margin-top: 36px; padding: 18px 22px; background: #EEF1FB; border-left: 4px solid #2E4488; border-radius: 6px; font-size: 12px; color: #404040; }
+  .footer-cta h4 { margin-top: 0; color: #2E4488; text-transform: none; font-size: 13px; letter-spacing: normal; }
 </style>
 </head>
 <body>
@@ -1925,7 +1957,7 @@ function openBrandedReport() {
   <div class="footer-cta">
     <h4>Want help running this across your portfolio?</h4>
     <p style="margin:0 0 8px;">SETA-ED offers methodologist-led deployments — running the framework across an entire grantee portfolio, producing the board-ready and funder-coalition-ready reporting your existing process doesn't generate. Three engagement tiers: Diligence Platform License, Portfolio Readiness Diagnostic, and Integrative Portfolio Partnership.</p>
-    <p style="margin:0;"><b>Talk to SETA-ED:</b> <a href="mailto:melina@seta-ed.com" style="color:#1F4E79;">melina@seta-ed.com</a> · <a href="https://seta-ed.com" style="color:#1F4E79;">seta-ed.com</a></p>
+    <p style="margin:0;"><b>Talk to SETA-ED:</b> <a href="mailto:melina@seta-ed.com" style="color:#2E4488;">melina@seta-ed.com</a> · <a href="https://seta-ed.com" style="color:#2E4488;">seta-ed.com</a></p>
   </div>
   <div class="seta-attribution">
     Methodology: SETA-ED Inclusive R&amp;D Readiness framework (Uncapher 2026, CC-BY 4.0).<br/>

@@ -4,26 +4,29 @@
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
 <title>PRISM Self-Assessment — SETA-ED</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
 :root {
   color-scheme: light;
-  --navy: #1F3A5F;
-  --navy-dark: #142747;
-  --orange: #E8861C;
-  --green: #2E7D5C;
-  --bg: #F8F9FB;
+  --navy: #2E4488;
+  --navy-dark: #223466;
+  --orange: #E0A129;
+  --green: #1E9E76;
+  --bg: #F7F8FC;
   --card: #FFFFFF;
-  --text: #1A1A1A;
-  --muted: #6B7280;
-  --border: #E5E7EB;
-  --tint: #EDF2F8;
+  --text: #131A2A;
+  --muted: #5A6277;
+  --border: #E7EAF3;
+  --tint: #EDEFF8;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0; padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background: var(--bg); color: var(--text); line-height: 1.5;
+  font-family: 'Libre Franklin', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.5; -webkit-font-smoothing:antialiased;
 }
 .wrap { max-width: 1280px; margin: 0 auto; padding: 24px 20px 80px; }
 
@@ -143,6 +146,28 @@ h1 { color: var(--navy); margin: 4px 0 8px; font-size: 28px; line-height: 1.2; f
 .reset-btn:hover { color: var(--navy); }
 
 #radar-canvas { max-width: 100%; height: auto !important; }
+
+/* --- PRISM Spectrum refresh (presentation only) --- */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:4px;z-index:9999;background:linear-gradient(90deg,#4362D0 0 33.33%,#12A08A 33.33% 66.66%,#E0A129 66.66% 100%);}
+h1,h2{letter-spacing:-.02em;}
+.kicker{color:#4362D0;}
+.tab.active{border-bottom-color:#4362D0;}
+.ladder,.score-panel,.overview-card,.example-card{border-radius:14px;}
+.btn{border-radius:9px;background:#131A2A;}
+.btn:hover{background:#000;}
+.btn.secondary{background:#fff;color:#131A2A;}
+.btn.secondary:hover{background:var(--tint);}
+.score-row.peoml{border-left-color:#12A08A;}
+.score-row.proml{border-left-color:#E0A129;}
+.score-panel-head{margin:0 0 20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.score-panel-head h2{margin:0 0 4px;color:var(--navy);font-size:17px;font-weight:700;letter-spacing:-.01em;}
+.score-panel-head p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;max-width:640px;}
+.results-jump{display:flex;justify-content:center;margin:24px 0 4px;}
+.view-results-btn{display:inline-flex;align-items:center;gap:8px;background:#131A2A;color:#fff;border:none;border-radius:10px;padding:13px 26px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px -8px rgba(19,26,42,.5);transition:transform .12s,filter .12s;}
+.view-results-btn:hover{transform:translateY(-1px);filter:brightness(1.08);}
+.score-val{color:#2E4488;}
+.rung.current::before{box-shadow:0 0 0 4px rgba(224,161,41,.18);}
+.timeline-card.target{border-left-color:var(--green);}
 </style>
 </head>
 <body>
@@ -152,7 +177,7 @@ h1 { color: var(--navy); margin: 4px 0 8px; font-size: 28px; line-height: 1.2; f
   <div class="kicker">PRISM · Portfolio Readiness Insight &amp; Scoring Methodology</div>
   <h1>PRISM Self-Assessment</h1>
   <p class="lead-tag" style="color:var(--orange); font-style:italic; font-weight:600; margin: 0 0 8px;">Know where you stand. Know what's next.</p>
-  <p class="lead">Where does your education R&D project actually stand on the three dimensions that matter — Prototype maturity, People composition, and Process discipline? Click through the levels, mark what's true, and see your full three-dimensional readiness profile. Built by SETA-ED on the same rubric funders are using on the other side.</p>
+  <p class="lead">Where does your education R&D project actually stand on the three dimensions that matter: Prototype maturity, People composition, and Process discipline? Click through the levels, mark what's true, and see your full three-dimensional readiness profile. Built by SETA-ED on the same rubric funders are using on the other side.</p>
 </div>
 
 <div class="tabs" role="tablist">
@@ -165,7 +190,15 @@ h1 { color: var(--navy); margin: 4px 0 8px; font-size: 28px; line-height: 1.2; f
 <div class="panel active" id="panel-assess">
   <div class="ladders" id="ladders"></div>
 
-  <div class="score-panel">
+  <div class="results-jump">
+    <button type="button" class="view-results-btn" onclick="(function(){var el=document.getElementById('score-panel');window.scrollTo({top:el.getBoundingClientRect().top+window.pageYOffset-20,behavior:'smooth'});})()">View my results ↓</button>
+  </div>
+
+  <div class="score-panel" id="score-panel">
+    <div class="score-panel-head">
+      <h2>Your readiness profile</h2>
+      <p>Updates automatically as you check items in the three ladders above — there's nothing to submit. Your answers are saved in this browser.</p>
+    </div>
     <div class="score-grid">
       <div>
         <canvas id="radar-canvas" width="320" height="320"></canvas>
@@ -439,6 +472,10 @@ function computeScore(fw) {
 // =========================================================
 function renderLadders() {
   const root = document.getElementById('ladders');
+  // Remember which rungs are expanded so a checkbox change doesn't collapse them
+  const openRungs = new Set(
+    [...root.querySelectorAll('.rung.expanded')].map(r => r.dataset.fw + ':' + r.dataset.lvl)
+  );
   root.innerHTML = '';
   Object.keys(FRAMEWORKS).forEach(fwKey => {
     const fw = FRAMEWORKS[fwKey];
@@ -450,7 +487,8 @@ function renderLadders() {
       const isCompleted = lvl.num <= score;
       const isCurrent = lvl.num === score + 1;
       const rung = document.createElement('div');
-      rung.className = 'rung' + (isCompleted ? ' completed' : '') + (isCurrent ? ' current' : '');
+      rung.className = 'rung' + (isCompleted ? ' completed' : '') + (isCurrent ? ' current' : '')
+        + (openRungs.has(fwKey + ':' + lvl.num) ? ' expanded' : '');
       rung.dataset.fw = fwKey;
       rung.dataset.lvl = lvl.num;
       const status = isCompleted ? '✓ achieved' : (isCurrent ? 'next up' : '');
@@ -524,7 +562,7 @@ function renderScores() {
   // Recommendations
   const recs = [];
   if (prl === 0 && peoml === 0 && proml === 0) {
-    recs.push('Pick any dimension and click level 1 to start. The framework is designed to surface the difference between aspirational language and operational reality — being honest at level 1 is more useful than aspirational at level 5.');
+    recs.push('Pick any dimension and click level 1 to start. The framework is designed to surface the difference between aspirational language and operational reality; being clear about being at level 2 is more useful than aspirational at level 5.');
   } else {
     // Find weakest normalized dimension
     const norms = { prl: prl/9, peoml: peoml/5, proml: proml/5 };
@@ -553,19 +591,20 @@ function renderScores() {
       datasets: [{
         label: 'Your readiness',
         data: [prl/9*100, peoml/5*100, proml/5*100],
-        backgroundColor: 'rgba(31, 58, 95, 0.18)',
-        borderColor: '#1F3A5F',
+        backgroundColor: 'rgba(46, 68, 136, 0.18)',
+        borderColor: '#2E4488',
         borderWidth: 2,
-        pointBackgroundColor: '#E8861C',
+        pointBackgroundColor: '#E0A129',
         pointBorderColor: '#fff',
         pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: '#1F3A5F',
+        pointHoverBorderColor: '#2E4488',
         pointRadius: 5,
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: true,
+      layout: { padding: 28 },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -583,7 +622,7 @@ function renderScores() {
         r: {
           min: 0, max: 100, ticks: { display: false, stepSize: 25 },
           grid: { color: '#E5E7EB' }, angleLines: { color: '#E5E7EB' },
-          pointLabels: { font: { size: 13, weight: '600' }, color: '#1F3A5F' },
+          pointLabels: { font: { size: 13, weight: '600' }, color: '#2E4488', padding: 8 },
         }
       }
     }
