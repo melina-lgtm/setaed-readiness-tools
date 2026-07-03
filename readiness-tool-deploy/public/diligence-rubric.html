@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" type="image/svg+xml" href="/prism-favicon.svg">
 <title>PRISM Portfolio Analysis — SETA-ED</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1442,7 +1443,7 @@ renderAll();
 // =========================================================
 // AI ANALYSIS (hosted version: uses /api/analyze server proxy)
 // =========================================================
-async function callAnalysisAPI(prompt) {
+async function callAnalysisAPI(payload) {
   const headers = { 'Content-Type': 'application/json' };
   // If signed in, include the access token so /api/analyze can attribute the call.
   try {
@@ -1456,7 +1457,7 @@ async function callAnalysisAPI(prompt) {
   const response = await fetch('/api/analyze', {
     method: 'POST',
     headers,
-    body: JSON.stringify({ prompt })
+    body: JSON.stringify(payload)
   });
   if (!response.ok) {
     let detail = '';
@@ -1667,8 +1668,7 @@ async function runAnalysis() {
     // ===== PASS 1: Readiness scoring =====
     setAnalyzeStatus('working', `<span class="spinner"></span><b>Pass 1 of 2 — Readiness scoring.</b> Analyzing ${(text.length/1000).toFixed(1)}KB of proposal text against 57 rubric questions across the 3 readiness frameworks. Typically 20–40 seconds…`);
     const t0 = Date.now();
-    const scoringPrompt = buildAnalysisPrompt(text);
-    const scoringResponse = await callAnalysisAPI(scoringPrompt);
+    const scoringResponse = await callAnalysisAPI({ proposalText: text, pass: 'scoring' });
     elapsedTotal += (Date.now() - t0);
 
     analysis = extractJSON(scoringResponse);
@@ -1679,8 +1679,7 @@ async function runAnalysis() {
     setAnalyzeStatus('working', `<span class="spinner"></span><b>Pass 2 of 2 — Risk inventory.</b> Mapping the proposal to a DARPA-style risk plan: 4–7 risk categories with short- and long-term mitigations and confidence ratings. Typically 15–30 seconds…`);
     const t1 = Date.now();
     try {
-      const riskPrompt = buildRiskPrompt(text);
-      const riskResponse = await callAnalysisAPI(riskPrompt);
+      const riskResponse = await callAnalysisAPI({ proposalText: text, pass: 'risk' });
       elapsedTotal += (Date.now() - t1);
       riskAnalysis = extractJSON(riskResponse);
       riskErrors = validateRisks(riskAnalysis);
